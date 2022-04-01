@@ -1,2 +1,2 @@
 # set-shred-slot
-A web application enables gym members to manage their daily workout schedules to track their progress and new users for signup.
+A web application that enables gym members to manage their daily workout schedules to track their progress and new users for signup.
