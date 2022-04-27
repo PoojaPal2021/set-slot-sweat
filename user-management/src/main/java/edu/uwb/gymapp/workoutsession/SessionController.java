@@ -1,0 +1,19 @@
+package edu.uwb.gymapp.workoutsession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+public class SessionController {
+
+    @Autowired
+    private SessionService sessionService;
+
+    @RequestMapping("/sessions")
+    public List<Session> getAllSessions() {
+        return sessionService.getAllSessions();
+    }
+}
