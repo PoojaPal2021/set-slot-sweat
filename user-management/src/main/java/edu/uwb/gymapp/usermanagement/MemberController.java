@@ -1,7 +1,10 @@
 package edu.uwb.gymapp.usermanagement;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -27,8 +30,14 @@ public class MemberController {
     }
 
     @RequestMapping(method= RequestMethod.POST, value="/members")
-    public void addMember(@RequestBody Member member) {
-        memberService.addMember(member);
+    public ResponseEntity<?> addMember(@RequestBody Member member) {
+        try {
+            Member newMember = memberService.addMember(member);
+            return new ResponseEntity<>(newMember, HttpStatus.OK);
+        } catch (RuntimeException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Member Creation Failed: " + ex.getCause().getCause().getMessage());
+        }
     }
 
     @RequestMapping(method=RequestMethod.PUT, value="/members/{id}")

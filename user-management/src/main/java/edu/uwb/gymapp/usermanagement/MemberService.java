@@ -27,8 +27,8 @@ public class MemberService {
         return memberRepository.findByUsername(username);
     }
 
-    public void addMember(Member member) {
-        memberRepository.save(member);
+    public Member addMember(Member member) {
+        return memberRepository.save(member);
     }
 
     public void updateMember(Member member) {
