@@ -33,6 +33,18 @@ public class Reservation {
     @Column(name = "member_email")
     private String memberEmail;
 
+    @Transient
+    private boolean isBooked;
+
+    public boolean isBooked() {
+        return isBooked;
+    }
+
+    public void setBooked(boolean booked) {
+        isBooked = booked;
+    }
+
+
     public LocalDateTime getScheduledTime() {
         return scheduledTime;
     }

@@ -26,7 +26,6 @@ public class ReservationController {
 
     @RequestMapping(value="/reservations", params="email", method = RequestMethod.GET)
     public List<Reservation> getAllReservations(@RequestParam("email") String email, Principal principal) {
-
         // Verify that we are accessing the reservations for the current user
         if (principal == null || !principal.getName().equals(email)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access not allowed for: " + email);
