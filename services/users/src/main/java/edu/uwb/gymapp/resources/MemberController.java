@@ -36,8 +36,10 @@ public class MemberController {
             Member newMember = memberService.addMember(member);
             return new ResponseEntity<>(newMember, HttpStatus.OK);
         } catch (RuntimeException ex) {
+            // TODO: Fixe error message to not send reason
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Member Creation Failed: " + ex.getCause().getCause().getMessage());
+
         }
     }
 
