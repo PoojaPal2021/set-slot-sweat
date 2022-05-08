@@ -8,21 +8,24 @@ import edu.uwb.gymapp.workoutsession.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.support.Repositories;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ReservationService {
@@ -32,6 +35,9 @@ public class ReservationService {
 
     @Autowired
     private WebApplicationContext appContext;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     public List<Reservation> getAllReservations(String memberEmail) {
         List<Reservation> reservations = new ArrayList<>();

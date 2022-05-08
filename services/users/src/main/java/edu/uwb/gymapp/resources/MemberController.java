@@ -30,7 +30,7 @@ public class MemberController {
         return memberService.getMember(id);
     }
 
-    @RequestMapping(method= RequestMethod.POST, value="/members")
+    @RequestMapping(method= RequestMethod.POST, value="/member/signup")
     public ResponseEntity<?> addMember(@RequestBody Member member) {
         try {
             Member newMember = memberService.addMember(member);
