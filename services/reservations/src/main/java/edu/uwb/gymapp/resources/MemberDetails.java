@@ -1,5 +1,6 @@
 package edu.uwb.gymapp.resources;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.uwb.gymapp.models.Member;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,28 +13,35 @@ import java.util.stream.Collectors;
 
 public class MemberDetails implements UserDetails {
 
-    private Member member;
-    private List<GrantedAuthority> authorities;
 
-    public MemberDetails(Member member) {
-        this.member = member;
-        String[] strRoles = {"MEMBER"};
-        this.authorities = Arrays.stream(strRoles).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+    private String username;
+
+
+    private String password;
+
+    public MemberDetails(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
+
+    public MemberDetails() {}
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        // we hardcode the roles for now
+        String[] strRoles = {"MEMBER"};
+        List<GrantedAuthority> authorities = Arrays.stream(strRoles).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
         return authorities;
     }
 
     @Override
     public String getPassword() {
-        return member.getPassword();
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return member.getEmail();
+        return username;
     }
 
     @Override
@@ -56,7 +64,17 @@ public class MemberDetails implements UserDetails {
         return true;
     }
 
-    public String getFullName() {
-        return member.getFirstName() + " " + member.getLastName();
+    @JsonProperty("username")
+    public void setUsername(String username) {
+        this.username = username;
     }
+
+    @JsonProperty("password")
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+//    public String getFullName() {
+//        return username;
+//    }
 }

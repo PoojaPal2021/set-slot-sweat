@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>edu.uwb.gymapp</groupId>
-	<artifactId>user-management</artifactId>
+	<artifactId>gym-reservations</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>user-management</name>
-	<description>user-management</description>
+	<name>gym-reservations</name>
+	<description>gym-reservations</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>

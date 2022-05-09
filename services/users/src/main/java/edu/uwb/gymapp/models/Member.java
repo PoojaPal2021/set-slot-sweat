@@ -1,5 +1,7 @@
 package edu.uwb.gymapp.models;
 
+import com.sun.istack.NotNull;
+import io.micrometer.core.lang.NonNull;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -12,12 +14,14 @@ public class Member {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String username;
 
     @NaturalId
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String password;
 
     // for authentication

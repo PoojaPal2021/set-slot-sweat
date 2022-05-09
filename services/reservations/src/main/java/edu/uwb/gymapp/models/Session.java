@@ -1,11 +1,14 @@
 package edu.uwb.gymapp.models;
 
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
 import java.sql.Time;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 @Entity
+@Proxy(lazy = false)
 public class Session {
 
     @Id

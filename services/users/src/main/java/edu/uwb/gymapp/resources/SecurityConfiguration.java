@@ -2,8 +2,10 @@ package edu.uwb.gymapp.resources;
 
 import edu.uwb.gymapp.resources.MemberDetailsService;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -23,14 +25,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web  /*HttpSecurity http*/) throws Exception {
+    public void configure(/*WebSecurity web*/  HttpSecurity http) throws Exception {
         // Set permission
-        web.ignoring().antMatchers("/**");
+//        web.ignoring().antMatchers("/**");
 
-//        http.authorizeRequests()
-//                .antMatchers("/members?", "members/**").hasAnyRole("MEMBER")
-//                .antMatchers("/").permitAll()
+        http.authorizeRequests()
+//                .antMatchers("/members/**").authenticated()
+                .antMatchers(HttpMethod.POST, "/**").permitAll();
 //                .and().formLogin();
+
+        http.csrf().disable();
     }
 
     @Bean
@@ -51,9 +55,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         return authProvider;
     }
-
-//    @Bean
-//    public PasswordEncoder getPasswordEncoder() {
-//        return NoOpPasswordEncoder.getInstance();
-//    }
 }

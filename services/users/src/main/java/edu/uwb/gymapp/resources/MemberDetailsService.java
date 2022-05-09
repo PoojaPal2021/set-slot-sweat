@@ -16,6 +16,7 @@ public class MemberDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        System.out.println("In Service...");
         Optional<Member> member = memberRepository.findByEmail(email);
         member.orElseThrow(() -> new UsernameNotFoundException("user not found: " + email));
         return member.map(MemberDetails::new).get();
