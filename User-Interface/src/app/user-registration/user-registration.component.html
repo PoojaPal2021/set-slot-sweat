@@ -1,0 +1,51 @@
+<form id="RegistrationForm" [formGroup]="profileForm" (ngSubmit)="registerNewMember()">
+   <ul class="wrapper">
+      <li class="form-row">
+         <label for="first-name">First Name: </label>
+         <input id="first-name" type="text" formControlName="firstName">
+      </li>
+     </ul> 
+   
+   <ul class="wrapper">
+      <li class="form-row">
+         <label for="last-name">Last Name: </label>
+         <input id="last-name" type="text" formControlName="lastName">
+      </li>
+   </ul>
+
+   <ul class="wrapper">
+      <li class="form-row">
+         <label for="user-email">Email: </label>
+         <input id="user-email" type="email" formControlName="email">
+      </li>
+   </ul>
+
+   <ul class="wrapper">
+      <li class="form-row">
+         <label for="user-pwd">Passowrd: </label>
+         <input id="user-pwd" type="password" formControlName="pwd">
+      </li>
+   </ul>
+
+   <ul class="wrapper">
+      
+         <label>
+            <input type="radio" value="trainer" formControlName="type">
+            <span>Trainer</span>
+         </label> &nbsp; &nbsp; &nbsp;
+         
+         <label>
+            <input type="radio" value="member" formControlName="type">
+            <span>Member</span>
+         </label>
+      
+   </ul>
+
+<button type="submit" [disabled]="!profileForm.valid" >Sign-Up</button>  
+ </form>
+<br/>
+<br/>
+ <footer>
+   <a href="https://github.com/PoojaPal2021/set-slot-sweat/wiki" target="_blank" rel="noopener"> Documentation can be found here
+   </a>
+</footer>

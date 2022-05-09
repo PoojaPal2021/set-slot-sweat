@@ -1,0 +1,47 @@
+{
+	"email": "poojapal1484@gmail.com",
+	"profile":
+         [
+             {
+			"sTitle": "Total body",
+			"sTrainer": "Alic C",
+			"sSlot": "5 AM",
+			"sStatus": false,
+			"sCount": "22",
+            "sDay": "Mon",
+            "description": " Total body workouts are designed to work on three major muscles- Back, check amd Legs"
+
+		    },
+		    {
+                "sTitle": "Stength and condition",
+                "sTrainer": " LT Murray",
+                "sSlot": "6 AM",
+                "sStatus": false,
+                "sCount": "20",
+                "sDay": "Tue",
+                "description": " S&C workouts are strength based training to incrimentally support the edurance "
+
+            },
+            {
+                "sTitle": "Yoga",
+                "sTrainer": " Kate M",
+                "sSlot": "9 AM",
+                "sStatus": false,
+                "sCount": "20",
+                "sDay": "Tue",
+                "description": " Yoga Asanas help to gain flexibility and mindfulness"
+
+            },
+            {
+                "sTitle": "Arms and Abs ",
+                "sTrainer": " LT Murray",
+                "sSlot": "6 AM",
+                "sStatus": true,
+                "sCount": "20",
+                "sDay": "Mon",
+                "description": " AA works designed to strengthen ARM muscles and support build biceps and triceps "
+
+            }
+
+	    ]
+}
