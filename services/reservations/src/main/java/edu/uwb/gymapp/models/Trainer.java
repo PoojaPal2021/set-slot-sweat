@@ -12,12 +12,14 @@ public class Trainer {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String username;
 
     @NaturalId
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String password;
 
     @Column(name = "first_name")

@@ -49,8 +49,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .regexMatchers("/reservation-service/api/v1/reservations\\?email=.").hasAnyRole("MEMBER")
                 .antMatchers("/login").permitAll()
-                .and().formLogin();
-
+                .and().formLogin()
+                .and()
+                .logout()
+                .logoutSuccessUrl("/logoutSuccess")
+                .deleteCookies("JSESSIONID")
+                .invalidateHttpSession(true);
         http.exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint());
         http.csrf().disable();
     }

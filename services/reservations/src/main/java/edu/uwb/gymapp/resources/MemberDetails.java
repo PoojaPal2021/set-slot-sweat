@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
 
 public class MemberDetails implements UserDetails {
 
-//    @JsonProperty("username")
+
     private String username;
 
-//    @JsonProperty("password")
+
     private String password;
 
     public MemberDetails(String username, String password) {

@@ -10,6 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
+@RequestMapping("/user-management/api/v1")
 public class MemberController {
 
     @Autowired
@@ -36,10 +37,8 @@ public class MemberController {
             Member newMember = memberService.addMember(member);
             return new ResponseEntity<>(newMember, HttpStatus.OK);
         } catch (RuntimeException ex) {
-            // TODO: Fixe error message to not send reason
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Member Creation Failed: " + ex.getCause().getCause().getMessage());
-
+                    "Failed to create user profile. Review your information and try again.");
         }
     }
 
@@ -52,5 +51,4 @@ public class MemberController {
     public void deleteMember(@PathVariable Long id) {
         memberService.deleteMember(id);
     }
-
 }

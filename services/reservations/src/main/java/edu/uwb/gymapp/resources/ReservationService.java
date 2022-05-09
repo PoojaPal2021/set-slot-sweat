@@ -111,4 +111,7 @@ public class ReservationService {
         return "SUCCESS";
     }
 
+    public void deleteReservation(Long reservationId) {
+        reservationRepository.deleteById(reservationId);
+    }
 }

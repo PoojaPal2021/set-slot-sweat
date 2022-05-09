@@ -4,33 +4,18 @@ import edu.uwb.gymapp.models.Member;
 import edu.uwb.gymapp.models.Reservation;
 import edu.uwb.gymapp.models.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
-import org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy;
 import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.Principal;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("reservation-service/api/v1")
+@RequestMapping("/reservation-service/api/v1")
 public class ReservationController {
 
     @Autowired
@@ -50,7 +35,6 @@ public class ReservationController {
     @RequestMapping(value="/member/login", method = RequestMethod.POST)
     public List<Reservation> login(@RequestBody MemberDetails memberDetails) {
 
-        System.out.println("Authenticating");
         UsernamePasswordAuthenticationToken authReq =
                 new UsernamePasswordAuthenticationToken(memberDetails.getUsername(),
                                                         memberDetails.getPassword());
@@ -65,11 +49,15 @@ public class ReservationController {
         return reservations;
     }
 
-
+    @RequestMapping(value="/member/logout", method = RequestMethod.POST)
+    public void logout() {
+        authentication = null;
+    }
 
     @RequestMapping(value="/session/book", params = "email", method = RequestMethod.POST)
-    public void addReservation(@RequestParam("email") String email,
+    public List<Reservation> addReservation(@RequestParam("email") String email,
                                @RequestBody Session session) {
+        // Authenticate
         if (authentication == null || !authentication.getName().equals(email)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access not allowed for: " + email);
         }
@@ -89,6 +77,21 @@ public class ReservationController {
         if (!status.equals("SUCCESS")) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, status);
         }
+        List<Reservation> reservations = reservationService.getAllReservations(email);
+        return reservations;
+    }
+
+    @RequestMapping(value="/session/cancel/{reservationId}", method=RequestMethod.DELETE)
+    public String cancelReservation(@RequestParam("email") String email,
+                                    @PathVariable Long reservationId) {
+        // Authenticate
+        if (authentication == null || !authentication.getName().equals(email)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access not allowed for: " + email);
+        }
+
+        reservationService.deleteReservation(reservationId);
+
+        return "Successfully cancelled reservation.";
     }
 
     @RequestMapping(value="/reservations", params="email", method = RequestMethod.GET)
@@ -105,5 +108,4 @@ public class ReservationController {
     public List<Reservation> getAllReservations() {
         return reservationService.getAllReservations();
     }
-
 }
