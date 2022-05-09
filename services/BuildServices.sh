@@ -1,44 +1,49 @@
 #! /bin/bash
 ############################################################################################
-#                    Script to start Gym Reservations App
+#                    Script to build Gym Reservations App Microservices
 #
-# This script starts the middle layer microservices of the Gym Reservation App.
+# This script builds the microservices for the Gym Reservations App
 #
 # In order for the microservices to run you need to have:
 #
 #   1. Java: At least Java 11
 #   2. JAVA_HOME environment variable should be set
 #
-# user-management service must be running for gym-reservations to work, so we start it
-# in the background.
+# This script uses the Maven Wrapper (mvnw) that comes with Spring Boot, so
+# you don't need to install maven.
+#
+# We skip the tests when building the project because some of the test don't yet pass,
+# since the project is still under development.
 #
 ############################################################################################
 
 ############################################################################################
-#                             RUN MICROSERVICES                                            #
+#                               BUILD THE MICROSERVICES                                    #
 ############################################################################################
 
-# This is a trap for the kill signal so the user-management process running in the
-# background gets kill at the we ctrl+c its parent process (this script).
-trap 'kill $BGPID; exit' INT
+# Check that JAVA_HOME is set
+if [ -z ${JAVA_HOME+x} ]; then
+    echo "JAVA_HOME is not set. Please set it to a JDK with Java 11 or greater."
+    exit 1
+fi
 
 # Color constants
 PURPLE='\033[0;35m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No color
 
-# Start user-management in the background
 echo -e "${GREEN}============================================================================${NC}"
-echo -e "${GREEN}|           START USER MANAGEMENT SERVICE IN THE BACKGROUND                |${NC}"
+echo -e "${GREEN}|                   BUILDING USER MANAGEMENT MICROSERVICE                  |${NC}"
 echo -e "${GREEN}============================================================================${NC}"
+cd users
+./mvnw clean package -Dmaven.test.skip=true
 
-java -jar users/target/user-management-0.0.1-SNAPSHOT.jar &> /dev/null &
-BGPID=$!
 
-# Start second process
-echo -e "${PURPLE}User Management Service successfully started ...${NC}"
 echo
 echo -e "${GREEN}============================================================================${NC}"
-echo -e "${GREEN}|           START GYM RESERVATIONS SERVICE IN THE FOREGROUND               |${NC}"
+echo -e "${GREEN}|                 BUILDING GYM RESERVATIONS MICROSERVICE                   |${NC}"
 echo -e "${GREEN}============================================================================${NC}"
-java -jar reservations/target/gym-reservations-0.0.1-SNAPSHOT.jar
+cd ../reservations
+./mvnw clean package -Dmaven.test.skip=true
+
+exit 0

@@ -2,7 +2,7 @@
 ############################################################################################
 #                            Gym Reservations App
 #
-# Script for building running test for the middle layer microservices of a
+# Script for building and running tests for the middle layer microservices of a
 # Gym Reservation App
 #
 # In order for the microservices to run you need to have:
