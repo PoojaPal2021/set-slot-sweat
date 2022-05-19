@@ -1,10 +1,12 @@
-<form id="RegistrationForm" [formGroup]="profileForm" (ngSubmit)="registerNewMember()">
+<form id="RegistrationForm" [formGroup]="profileForm" (ngSubmit)="registerNewUser(profileForm)">
    <ul class="wrapper">
       <li class="form-row">
          <label for="first-name">First Name: </label>
          <input id="first-name" type="text" formControlName="firstName">
+        
       </li>
      </ul> 
+     
    
    <ul class="wrapper">
       <li class="form-row">
@@ -19,13 +21,19 @@
          <input id="user-email" type="email" formControlName="email">
       </li>
    </ul>
+   <div *ngIf="profileForm.controls['email'].invalid && (profileForm.controls['email'].dirty || profileForm.controls['email'].touched)" style="color:red">
+      Email is required.
+    </div>
 
    <ul class="wrapper">
       <li class="form-row">
          <label for="user-pwd">Passowrd: </label>
-         <input id="user-pwd" type="password" formControlName="pwd">
+         <input id="user-pwd" type="password" formControlName="password">
       </li>
    </ul>
+   <div *ngIf="profileForm.controls['password'].invalid && (profileForm.controls['password'].dirty || profileForm.controls['password'].touched)" style="color:red">
+      Password should be minimum of 6 characters.
+    </div>
 
    <ul class="wrapper">
       

@@ -1,26 +1,38 @@
 
 
-<form [formGroup]="loginForm" (ngSubmit)="loadProfile()" [hidden]="hideLoginForm">
+<form [formGroup]="loginForm" (ngSubmit)="loadProfile(loginForm)" >
+    <!-- [hidden]="hideLoginForm"  -->
  
     <ul class="wrapper">
        <li class="form-row">
           <label for="user-email">Email: </label>
           <input id="user-email" type="email" formControlName="email">
+         
        </li>
     </ul>
+    <div *ngIf="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)" style="color:red">
+      Email is required.
+    </div>
  
     <ul class="wrapper">
        <li class="form-row">
           <label for="user-pwd">Passowrd: </label>
-          <input id="user-pwd" type="password" formControlName="pwd">
+          <input id="user-pwd" type="password" formControlName="password">
+          
        </li>
     </ul>
+    <div *ngIf="loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)" style="color:red">
+      Password should be minimum of 6 characters.
+    </div>
  
+ <div>
+   <button type="submit" [disabled]="!loginForm.valid" >Login</button>  
+ </div>
  
- <button type="submit" [disabled]="!loginForm.valid" >Login</button>  
 </form>
 
-<div class="container">
+
+<!-- <div class="container">
     <h1> {{userEmail}}</h1>
 </div>
 
@@ -55,6 +67,6 @@
 
 <div>
 
- 
+  -->
 
-
+ -->
