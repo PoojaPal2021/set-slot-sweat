@@ -21,8 +21,7 @@ export class ScheduleSessionService {
 
 
     const headers = { 'Content-Type': 'application/json', };
-    const body = {  "username": 'testusername', // username is required
-                    "firstName": profile.value['firstName'] ,
+    const body = {  "firstName": profile.value['firstName'] ,
                     "lastName" : profile.value['lastName'],
                     "email" : profile.value['email'],
                     "password" : profile.value['password']

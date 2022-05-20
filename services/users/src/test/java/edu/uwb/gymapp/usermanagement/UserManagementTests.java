@@ -39,7 +39,6 @@ class UserManagementTests {
 
 		// GIVEN
 		Member member = new Member();
-		member.setUsername("testUsername");
 		member.setEmail("testuser@gymapp.com");
 		member.setPassword("SuperSecure");
 
@@ -51,7 +50,6 @@ class UserManagementTests {
 
 		// THEN
 		Member responseMember = response.getBody();
-		Assertions.assertEquals(member.getUsername(), responseMember.getUsername());
 		Assertions.assertEquals(member.getEmail(), responseMember.getEmail());
 
 		// Clean up
@@ -64,27 +62,6 @@ class UserManagementTests {
 
 		// GIVEN
 		Member member = new Member();
-		member.setUsername("testUsername");
-		member.setPassword("SuperSecure");
-
-		// WHEN
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<Member> request = new HttpEntity<>(member, headers);
-
-		ResponseEntity<Member> response = this.restTemplate.postForEntity(endpoint, request, Member.class);
-
-		// THEN
-		Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-	}
-
-	@Test
-	public void signupWithoutUsernameShouldFail() {
-		String endpoint = "http://localhost:" + port + "/user-management/api/v1/member/signup";
-
-		// GIVEN
-		Member member = new Member();
-		member.setEmail("testuser@gymapp.com");
 		member.setPassword("SuperSecure");
 
 		// WHEN
@@ -104,7 +81,6 @@ class UserManagementTests {
 
 		// GIVEN
 		Member member = new Member();
-		member.setUsername("testUsername");
 		member.setEmail("testuser@gymapp.com");
 
 		// WHEN
@@ -124,7 +100,6 @@ class UserManagementTests {
 
 		// GIVEN
 		Member member = new Member();
-		member.setUsername("testUsername");
 		member.setEmail("testuser@gymapp.com");
 		member.setPassword("SuperSecure");
 
@@ -136,12 +111,10 @@ class UserManagementTests {
 
 		// AND: first succeeds
 		Member goodResponseMember = goodResponse.getBody();
-		Assertions.assertEquals(member.getUsername(), goodResponseMember.getUsername());
 		Assertions.assertEquals(member.getEmail(), goodResponseMember.getEmail());
 
 		// THEN: Second attempt to signup with same email should fail
 		Member doubleMember = new Member();
-		member.setUsername("newUserName");
 		member.setEmail("testuser@gymapp.com");
 		member.setPassword("SuperSecure");
 		request = new HttpEntity<>(doubleMember, headers);
