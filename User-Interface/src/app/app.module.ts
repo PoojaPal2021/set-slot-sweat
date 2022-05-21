@@ -10,7 +10,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
-import {ScheduleSessionService} from './services/schedule-session.service'
+import {ScheduleSessionService} from './services/schedule-session.service';
+
 
 @NgModule({
   declarations: [
