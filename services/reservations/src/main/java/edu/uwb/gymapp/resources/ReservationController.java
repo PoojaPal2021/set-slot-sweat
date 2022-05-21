@@ -3,6 +3,7 @@ package edu.uwb.gymapp.resources;
 import edu.uwb.gymapp.models.Member;
 import edu.uwb.gymapp.models.Reservation;
 import edu.uwb.gymapp.models.Session;
+import edu.uwb.gymapp.workoutsession.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/reservation-service/api/v1")
@@ -21,6 +23,8 @@ public class ReservationController {
     @Autowired
     public ReservationService reservationService;
 
+    @Autowired
+    public SessionService sessionService;
 
     private Authentication authentication;
 
@@ -54,12 +58,20 @@ public class ReservationController {
         authentication = null;
     }
 
-    @RequestMapping(value="/session/book", params = "email", method = RequestMethod.POST)
+    @RequestMapping(value="/session/book/{sessionId}", params = "email", method = RequestMethod.POST)
     public List<Reservation> addReservation(@RequestParam("email") String email,
-                               @RequestBody Session session) {
+                               @PathVariable Long sessionId) {
         // Authenticate
         if (authentication == null || !authentication.getName().equals(email)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access not allowed for: " + email);
+        }
+
+        Session session;
+
+        try {
+            session = sessionService.getSession(sessionId);
+        } catch (NoSuchElementException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Session ID couldn't be found: " + sessionId);
         }
 
         Reservation reservation = new Reservation();

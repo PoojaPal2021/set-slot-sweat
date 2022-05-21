@@ -18,4 +18,8 @@ public class SessionService {
         sessionRepository.findAll().forEach(sessions::add);
         return sessions;
     }
+
+    public Session getSession(Long id) {
+        return sessionRepository.findById(id).get();
+    }
 }
