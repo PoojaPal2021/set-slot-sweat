@@ -36,24 +36,26 @@ class UserManagementTests {
 	@Test
 	public void signupShouldSucceed() {
 		String endpoint = "http://localhost:" + port + "/user-management/api/v1/member/signup";
+		String memberEmail = "testuser@gymapp.com";
 
 		// GIVEN
 		Member member = new Member();
-		member.setEmail("testuser@gymapp.com");
+		member.setEmail(memberEmail);
 		member.setPassword("SuperSecure");
 
 		// WHEN
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Member> request = new HttpEntity<>(member, headers);
-		ResponseEntity<Member> response = this.restTemplate.postForEntity(endpoint, request, Member.class);
+		ResponseEntity<String> response = this.restTemplate.postForEntity(endpoint, request, String.class);
 
 		// THEN
-		Member responseMember = response.getBody();
-		Assertions.assertEquals(member.getEmail(), responseMember.getEmail());
+		String responseString = response.getBody();
+		Assertions.assertEquals("Your profile was successfully created with set-slot-sweat.", responseString);
 
 		// Clean up
-		memberService.deleteMember(responseMember.getId());
+		Member addedMember = memberService.getMember(memberEmail);
+		memberService.deleteMember(addedMember.getId());
 	}
 
 	@Test
@@ -97,34 +99,36 @@ class UserManagementTests {
 	@Test
 	public void signupTwiceWithSameEmailShouldFail() {
 		String endpoint = "http://localhost:" + port + "/user-management/api/v1/member/signup";
+		String memberEmail = "testuser@gymapp.com";
 
 		// GIVEN
 		Member member = new Member();
-		member.setEmail("testuser@gymapp.com");
+		member.setEmail(memberEmail);
 		member.setPassword("SuperSecure");
 
 		// WHEN
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Member> request = new HttpEntity<>(member, headers);
-		ResponseEntity<Member> goodResponse = this.restTemplate.postForEntity(endpoint, request, Member.class);
+		ResponseEntity<String> goodResponse = this.restTemplate.postForEntity(endpoint, request, String.class);
 
 		// AND: first succeeds
-		Member goodResponseMember = goodResponse.getBody();
-		Assertions.assertEquals(member.getEmail(), goodResponseMember.getEmail());
+		String goodResponseString = goodResponse.getBody();
+		Assertions.assertEquals("Your profile was successfully created with set-slot-sweat.", goodResponseString);
 
 		// THEN: Second attempt to signup with same email should fail
 		Member doubleMember = new Member();
 		member.setEmail("testuser@gymapp.com");
 		member.setPassword("SuperSecure");
 		request = new HttpEntity<>(doubleMember, headers);
-		ResponseEntity<Member> badResponse = this.restTemplate.postForEntity(endpoint, request, Member.class);
+		ResponseEntity<String> badResponse = this.restTemplate.postForEntity(endpoint, request, String.class);
 
 		// Failure returns a BAD_REQUEST
 		Assertions.assertEquals(HttpStatus.BAD_REQUEST, badResponse.getStatusCode());
 
 		// Clean up database
-		memberService.deleteMember(goodResponseMember.getId());
+		Member addedMember = memberService.getMember(memberEmail);
+		memberService.deleteMember(addedMember.getId());
 	}
 
 }
