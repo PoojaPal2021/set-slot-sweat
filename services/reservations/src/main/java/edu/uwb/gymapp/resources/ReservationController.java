@@ -5,6 +5,7 @@ import edu.uwb.gymapp.models.Reservation;
 import edu.uwb.gymapp.models.Session;
 import edu.uwb.gymapp.workoutsession.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -101,7 +102,11 @@ public class ReservationController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access not allowed for: " + email);
         }
 
-        reservationService.deleteReservation(reservationId);
+        try {
+            reservationService.deleteReservation(reservationId);
+        } catch (EmptyResultDataAccessException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No reservation exists for id: " + reservationId);
+        }
 
         return "Successfully cancelled reservation.";
     }
