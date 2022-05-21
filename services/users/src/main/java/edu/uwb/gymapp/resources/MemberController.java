@@ -2,6 +2,7 @@ package edu.uwb.gymapp.resources;
 
 import edu.uwb.gymapp.models.Member;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,10 +33,13 @@ public class MemberController {
     }
 
     @RequestMapping(method= RequestMethod.POST, value="/member/signup")
-    public ResponseEntity<?> addMember(@RequestBody Member member) {
+    public ResponseEntity<String> addMember(@RequestBody Member member) {
         try {
             Member newMember = memberService.addMember(member);
-            return new ResponseEntity<>(newMember, HttpStatus.OK);
+            return new ResponseEntity<>("Your profile was successfully created with set-slot-sweat.", HttpStatus.OK);
+        } catch (DataIntegrityViolationException ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Sign Up Failed: Email already exists in the system.");
         } catch (RuntimeException ex) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Failed to create user profile. Review your information and try again.");

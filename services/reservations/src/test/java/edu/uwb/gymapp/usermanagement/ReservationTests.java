@@ -3,6 +3,7 @@ package edu.uwb.gymapp.usermanagement;
 import edu.uwb.gymapp.models.*;
 import edu.uwb.gymapp.resources.ReservationController;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -130,10 +131,13 @@ class ReservationTests {
 
 	@Test
 	public void bookingSessionShouldSucceed() {
+		// TODO: setup a member that is only used for testing
 		String email = "jardiamj@gymapp.com";
-		String bookingEndpoint = "http://localhost:" + port + "/reservation-service/api/v1/session/book?email=" + email;
+		Long sessionIdToBook = 5L;
+		String bookingEndpoint = "http://localhost:" + port +
+				                 "/reservation-service/api/v1/session/book/" + sessionIdToBook +
+						         "?email=" + email;
 		String loginEndpoint = "http://localhost:" + port + "/reservation-service/api/v1/member/login";
-		Long sessionIdToBook = 12L;
 
 		// GIVEN: a valid user logs in
 		HttpHeaders headers = new HttpHeaders();
@@ -144,11 +148,7 @@ class ReservationTests {
 		HttpEntity<Map<String, String>> request = new HttpEntity<>(authMap, headers);
 		ResponseEntity<Reservation[]> loginResponse = this.restTemplate.postForEntity(loginEndpoint, request, Reservation[].class);
 
-		// AND: Tries to book a new session
-		Session session = sessionRepository.getById(sessionIdToBook);
-		HttpEntity<Session> bookingRequest = new HttpEntity<>(session, headers);
-		ResponseEntity<Reservation[]> bookingResponse = this.restTemplate.postForEntity(bookingEndpoint, bookingRequest, Reservation[].class);
-//		System.out.println(bookingResponse.getStatusCode());
+		ResponseEntity<Reservation[]> bookingResponse = this.restTemplate.postForEntity(bookingEndpoint, null, Reservation[].class);
 
 		// THEN: Both returned lists are equal but session ID 2 is now booked
 		Long newBookedReservationId = -1L;
@@ -178,18 +178,16 @@ class ReservationTests {
 	public void bookingSessionAfterLoginOutShouldFail() {
 		String email = "jardiamj@gymapp.com";
 		String logoutEndPoint = "http://localhost:" + port + "/reservation-service/api/v1/member/logout";
-		String bookingEndpoint = "http://localhost:" + port + "/reservation-service/api/v1/session/book?email=" + email;
+		Long sessionIdToBook = 5L;
+		String bookingEndpoint = "http://localhost:" + port +
+				"/reservation-service/api/v1/session/book/" + sessionIdToBook +
+				"?email=" + email;
 
 		// GIVEN: User is logged out
 		this.restTemplate.postForEntity(logoutEndPoint, new HttpEntity<>(null), String.class);
 
 		// WHEN: Try to book a session
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-
-		Session session = sessionRepository.getById(2L);
-		HttpEntity<Session> request = new HttpEntity<>(session, headers);
-		ResponseEntity<String> response = this.restTemplate.postForEntity(bookingEndpoint, request, null);
+		ResponseEntity<String> response = this.restTemplate.postForEntity(bookingEndpoint, null, null);
 
 		// THEN: Access is denied
 		Assertions.assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
@@ -198,9 +196,11 @@ class ReservationTests {
 	@Test
 	public void bookingSameSessionTwiceShouldFail() {
 		String email = "jardiamj@gymapp.com";
-		String bookingEndpoint = "http://localhost:" + port + "/reservation-service/api/v1/session/book?email=" + email;
+		Long sessionIdToBook = 5L;
+		String bookingEndpoint = "http://localhost:" + port +
+				"/reservation-service/api/v1/session/book/" + sessionIdToBook +
+				"?email=" + email;
 		String loginEndpoint = "http://localhost:" + port + "/reservation-service/api/v1/member/login";
-		Long sessionIdToBook = 12L;
 
 		// GIVEN: a valid user logs in
 		HttpHeaders headers = new HttpHeaders();
@@ -212,13 +212,11 @@ class ReservationTests {
 		ResponseEntity<Reservation[]> loginResponse = this.restTemplate.postForEntity(loginEndpoint, request, Reservation[].class);
 
 		// WHEN: Tries to book the same session twice
-		Session session = sessionRepository.getById(sessionIdToBook);
-		HttpEntity<Session> bookingRequest = new HttpEntity<>(session, headers);
-		ResponseEntity<Reservation[]> bookingResponse = this.restTemplate.postForEntity(bookingEndpoint, bookingRequest, Reservation[].class);
+		ResponseEntity<Reservation[]> bookingResponse = this.restTemplate.postForEntity(bookingEndpoint, null, Reservation[].class);
 //		System.out.println("Booking response status: " + bookingResponse.getStatusCode());
 
 		// THEN: second attempt should return a CONFLIC Http status
-		ResponseEntity<String> bookingResponse2 = this.restTemplate.postForEntity(bookingEndpoint, bookingRequest, String.class);
+		ResponseEntity<String> bookingResponse2 = this.restTemplate.postForEntity(bookingEndpoint, null, String.class);
 		// Assert status code in CONFLICT
 		Assertions.assertEquals(HttpStatus.CONFLICT, bookingResponse2.getStatusCode());
 
@@ -245,10 +243,12 @@ class ReservationTests {
 	@Test
 	public void cancelingRecentlyBookedReservationShouldSucceed() {
 		String email = "jardiamj@gymapp.com";
-		Long sessionIdToBook = 12L;
 		String cancellationEndpoint= "http://localhost:" + port +
 				  				      "/reservation-service/api/v1/session/cancel/";
-		String bookingEndpoint = "http://localhost:" + port + "/reservation-service/api/v1/session/book?email=" + email;
+		Long sessionIdToBook = 5L;
+		String bookingEndpoint = "http://localhost:" + port +
+				"/reservation-service/api/v1/session/book/" + sessionIdToBook +
+				"?email=" + email;
 		String loginEndpoint = "http://localhost:" + port + "/reservation-service/api/v1/member/login";
 
 		List<Reservation> originalReservationList = reservationRepository.findByMemberEmail(email);
@@ -265,9 +265,7 @@ class ReservationTests {
 
 		// WHEN: Books and then cancels a session
 		// Booking:
-		Session session = sessionRepository.getById(sessionIdToBook);
-		HttpEntity<Session> bookingRequest = new HttpEntity<>(session, headers);
-		ResponseEntity<Reservation[]> bookingResponse = this.restTemplate.postForEntity(bookingEndpoint, bookingRequest, Reservation[].class);
+		ResponseEntity<Reservation[]> bookingResponse = this.restTemplate.postForEntity(bookingEndpoint, null, Reservation[].class);
 //		System.out.println("Booking response status: " + bookingResponse.getStatusCode());
 		// Cancellation:
 		Long newBookedReservationId = -1L;
@@ -296,10 +294,8 @@ class ReservationTests {
 	@Test
 	public void cancelingUnbookedReservationShouldFail() {
 		String email = "jardiamj@gymapp.com";
-		Long sessionIdToBook = 12L;
 		String cancellationEndpoint= "http://localhost:" + port +
 				"/reservation-service/api/v1/session/cancel/";
-		String bookingEndpoint = "http://localhost:" + port + "/reservation-service/api/v1/session/book?email=" + email;
 		String loginEndpoint = "http://localhost:" + port + "/reservation-service/api/v1/member/login";
 
 		// GIVEN: a valid user logs in
