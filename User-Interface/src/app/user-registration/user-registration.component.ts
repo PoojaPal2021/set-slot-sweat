@@ -34,7 +34,7 @@ export class UserRegistrationComponent implements OnInit {
     if (profileForm.controls['type'].value == 'member')
     {
       this.scheduleSessionService.registerNewMember(profileForm).subscribe((data: any)=>{
-        console.log(data);
+        console.log(" DATA", data);
         // this.products = data;
       });
 

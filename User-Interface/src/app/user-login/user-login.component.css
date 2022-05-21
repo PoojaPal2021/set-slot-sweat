@@ -18,9 +18,8 @@
 
 
   .example-card {
-    
-    max-width: 400px;
-    margin-bottom: 8px;
+    max-width: 800px;
+    margin-bottom: 20px;
   }
 
   .scheduleBody{
@@ -30,6 +29,33 @@
   {
     background-color: aquamarine;
   }
+
+
+.loginTemplate
+{
+  max-width: 500px;
+  margin: auto;
+  background: white;
+  padding: 10px;
+}
+.ScheduleTemplate
+{
+  max-width: 900px;
+  margin: auto;
+  background: white;
+  padding: 10px;
+
+}
+.terminal{
+  margin: 20px;
+}
+.mat-fab
+{
+  background-color: #3abfa0;
+  color: black;
+  min-width: 90px;
+  margin : 14px
+}
 
 
 

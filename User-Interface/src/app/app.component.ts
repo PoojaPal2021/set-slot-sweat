@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'set-slot-sweat';
+  homeTemp: boolean = false;
 }
