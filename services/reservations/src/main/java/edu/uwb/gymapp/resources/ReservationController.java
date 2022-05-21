@@ -69,7 +69,11 @@ public class ReservationController {
      */
     @RequestMapping(value="/member/logout", method = RequestMethod.POST)
     public void logout() {
-        String username = authentication.getName();
+        String username = "";
+        if (authentication != null) {
+            username = authentication.getName();
+        }
+
         authentication = null;
         logger.info("Successful logout for Member: " + username);
     }
