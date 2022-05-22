@@ -1,6 +1,7 @@
 package edu.uwb.gymapp.resources;
 
 import edu.uwb.gymapp.models.Reservation;
+import edu.uwb.gymapp.models.ResponseMessage;
 import edu.uwb.gymapp.models.Session;
 import edu.uwb.gymapp.workoutsession.SessionService;
 import org.slf4j.Logger;
@@ -131,9 +132,9 @@ public class ReservationController {
      * @param reservationId The id of the reservation to be cancelled
      * @return  Success or failure message string
      */
-    @RequestMapping(value="/session/cancel/{reservationId}", method=RequestMethod.DELETE)
-    public String cancelReservation(@RequestParam("email") String email,
-                                    @PathVariable Long reservationId) {
+    @RequestMapping(value="/session/cancel/{reservationId}", method=RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseMessage cancelReservation(@RequestParam("email") String email,
+                                             @PathVariable Long reservationId) {
         // Authenticate
         if (authentication == null || !authentication.getName().equals(email)) {
             logger.debug("Blocked reservation cancelling access to user: " + email);
@@ -148,7 +149,9 @@ public class ReservationController {
         }
 
         logger.info("Successfully cancelled reservation with id: " + reservationId);
-        return "Successfully cancelled reservation.";
+        ResponseMessage responseMessage = new ResponseMessage();
+        responseMessage.setMessage("Successfully cancelled reservation.");
+        return responseMessage;
     }
 
     /**

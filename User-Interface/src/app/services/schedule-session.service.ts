@@ -27,7 +27,7 @@ export class ScheduleSessionService {
                     "password" : profile.value['password']
                   };
     console.log("Body ==>", body)
-    return  this.http.post(apiendpoints.REGISTER_MEMBER_URL, body, {headers,'responseType':'text'}).pipe(catchError(this.handleErrorSignUp));
+    return  this.http.post(apiendpoints.REGISTER_MEMBER_URL, body, {headers}).pipe(catchError(this.handleErrorSignUp));
   }
 
   registerNewTrainer(profile: FormGroup)
@@ -40,7 +40,7 @@ export class ScheduleSessionService {
                     password : profile.value['password']
                   };
     console.log("Body ==>", body)
-    return  this.http.post(apiendpoints.REGISTER_TRAINER_URL, body, {headers,'responseType':'text'}).pipe(catchError(this.handleErrorSignUp));
+    return  this.http.post(apiendpoints.REGISTER_TRAINER_URL, body, {headers}).pipe(catchError(this.handleErrorSignUp));
 
   }
 
@@ -53,7 +53,7 @@ export class ScheduleSessionService {
                      password : loginForm.value['password']
                    };
       console.log("Body ==>", body)
-      return  this.http.post(apiendpoints.AUTHENTICATE_AND_LOAD_URL, body,{headers,'responseType':'text'}).pipe(catchError(this.handleError));
+      return  this.http.post(apiendpoints.AUTHENTICATE_AND_LOAD_URL, body,{headers}).pipe(catchError(this.handleError));
   }
 
   

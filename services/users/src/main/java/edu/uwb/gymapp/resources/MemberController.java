@@ -1,11 +1,13 @@
 package edu.uwb.gymapp.resources;
 
 import edu.uwb.gymapp.models.Member;
+import edu.uwb.gymapp.models.ResponseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -58,13 +60,13 @@ public class MemberController {
      * @param member    JSON object with all member information
      * @return  Success or failure message string
      */
-    @RequestMapping(method= RequestMethod.POST, value="/member/signup", produces = "text/plain")
-    @ResponseBody
-    public String addMember(@RequestBody Member member) {
+    @RequestMapping(method= RequestMethod.POST, value="/member/signup", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseMessage addMember(@RequestBody Member member) {
         try {
             Member newMember = memberService.addMember(member);
             logger.info("Successfully created profile for member with email: " + member.getEmail());
-            return "Your profile was successfully created with set-slot-sweat.";
+            ResponseMessage responseMessage = new ResponseMessage("Your profile was successfully created with set-slot-sweat.");
+            return responseMessage;
         } catch (DataIntegrityViolationException ex) {
             logger.info("Sign Up Failed. Email already exists in the system:" + member.getEmail());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
