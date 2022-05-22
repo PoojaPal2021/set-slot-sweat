@@ -149,8 +149,7 @@ public class ReservationController {
         }
 
         logger.info("Successfully cancelled reservation with id: " + reservationId);
-        ResponseMessage responseMessage = new ResponseMessage();
-        responseMessage.setMessage("Successfully cancelled reservation.");
+        ResponseMessage responseMessage = new ResponseMessage("Successfully cancelled reservation.");
         return responseMessage;
     }
 
