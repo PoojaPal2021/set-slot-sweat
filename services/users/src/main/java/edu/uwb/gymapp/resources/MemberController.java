@@ -58,12 +58,13 @@ public class MemberController {
      * @param member    JSON object with all member information
      * @return  Success or failure message string
      */
-    @RequestMapping(method= RequestMethod.POST, value="/member/signup")
-    public ResponseEntity<String> addMember(@RequestBody Member member) {
+    @RequestMapping(method= RequestMethod.POST, value="/member/signup", produces = "text/plain")
+    @ResponseBody
+    public String addMember(@RequestBody Member member) {
         try {
             Member newMember = memberService.addMember(member);
             logger.info("Successfully created profile for member with email: " + member.getEmail());
-            return new ResponseEntity<>("Your profile was successfully created with set-slot-sweat.", HttpStatus.OK);
+            return "Your profile was successfully created with set-slot-sweat.";
         } catch (DataIntegrityViolationException ex) {
             logger.info("Sign Up Failed. Email already exists in the system:" + member.getEmail());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
