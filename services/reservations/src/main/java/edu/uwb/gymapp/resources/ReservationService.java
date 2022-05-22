@@ -88,7 +88,8 @@ public class ReservationService {
         Long sessionId = reservation.getSession().getId();
         Integer sessionCapacity = reservation.getSession().getCapacity();
         List<Reservation> curBookings = reservationRepository
-                .findByScheduledTimeGreaterThanAndSessionId(scheduledTime, sessionId);
+                .findByScheduledTimeGreaterThanAndSessionId(LocalDateTime.now(), sessionId);
+        System.out.println(curBookings);
         if (curBookings.size() >= sessionCapacity) {
             return "Session is at full capacity";
         }
