@@ -53,7 +53,7 @@ export class ScheduleSessionService {
                      password : loginForm.value['password']
                    };
       console.log("Body ==>", body)
-      return  this.http.post(apiendpoints.AUTHENTICATE_AND_LOAD_URL, body,{headers}).pipe(catchError(this.handleError));
+      return  this.http.post(apiendpoints.AUTHENTICATE_AND_LOAD_URL, body,{headers,'responseType':'text'}).pipe(catchError(this.handleError));
   }
 
   
