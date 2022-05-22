@@ -171,6 +171,23 @@ public class ReservationController {
     }
 
     /**
+     * Retrieve the list of reservations booked by the given member email
+     * @param email The email address of the member retrieving the list of reservations
+     * @return The list of reservations booked by the given member
+     */
+    @RequestMapping(value="/reservations/booked", params="email", method = RequestMethod.GET)
+    public List<Reservation> getAllBookedReservations(@RequestParam("email") String email) {
+        // Verify that we are accessing the reservations for the current user
+        if (authentication == null || !authentication.getName().equals(email)) {
+            logger.debug("Blocked reservations access to user: " + email);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access not allowed for: " + email);
+        }
+
+        logger.info("All reservations have been retrieved for user: " + email);
+        return reservationService.getAllBookedReservations(email);
+    }
+
+    /**
      * Retrieve the list of reservations
      * @return The list of reservations
      */

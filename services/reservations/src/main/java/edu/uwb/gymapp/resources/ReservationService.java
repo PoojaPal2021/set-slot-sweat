@@ -28,7 +28,7 @@ public class ReservationService {
         Set<Long> idSet = new HashSet<>();
         LocalDateTime currentTime = LocalDateTime.now();
         reservationRepository
-                .findByScheduledTimeGreaterThanAndMemberEmail(currentTime, memberEmail)
+                .findByScheduledTimeGreaterThanAndMemberEmailOrderByScheduledTimeAsc(currentTime, memberEmail)
                 .forEach(r -> {
                     r.setBooked(true);
 //                    r.getSession().setDayAbbreviation(r.getSession().getDayOfWeek()); // Transient day abbreviation
@@ -48,6 +48,19 @@ public class ReservationService {
                 }
             }
         );
+
+        return reservations;
+    }
+
+    public List<Reservation> getAllBookedReservations(String memberEmail) {
+        List<Reservation> reservations = new ArrayList<>();
+        LocalDateTime now = LocalDateTime.now();
+        reservationRepository
+                .findByScheduledTimeGreaterThanAndMemberEmailOrderByScheduledTimeAsc(now, memberEmail)
+                .forEach(reservation -> {
+                    reservation.setBooked(true);
+                    reservations.add(reservation);
+                });
 
         return reservations;
     }
