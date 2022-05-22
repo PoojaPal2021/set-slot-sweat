@@ -45,7 +45,12 @@ public class ReservationService {
         LocalDateTime currentTime = LocalDateTime.now();
         reservationRepository
                 .findByScheduledTimeGreaterThanAndMemberEmail(currentTime, memberEmail)
-                .forEach(r -> {r.setBooked(true); reservations.add(r); idSet.add(r.getSession().getId());});
+                .forEach(r -> {
+                    r.setBooked(true);
+                    r.getSession().setDayAbbreviation(r.getSession().getDayOfWeek());
+                    reservations.add(r);
+                    idSet.add(r.getSession().getId());
+                });
 
         // Add non booked sessions to list with isBooked set to false. We do this so we have one list with all
         // available and booked sessions together.
@@ -56,6 +61,7 @@ public class ReservationService {
         sessionRepository.findAll().forEach(session -> {
                 if (!idSet.contains(session.getId())) {
                     Reservation reservation = new Reservation();
+                    session.setDayAbbreviation(session.getDayOfWeek());
                     reservation.setSession(session);
                     reservation.setBooked(false);
                     reservations.add(reservation);
