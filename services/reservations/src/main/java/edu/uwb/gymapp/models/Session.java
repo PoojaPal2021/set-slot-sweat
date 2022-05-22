@@ -30,8 +30,8 @@ public class Session {
     @Column(name = "week_day")
     private DayOfWeek dayOfWeek;
 
-    @Transient
-    private String dayAbbreviation;
+//    @Transient
+//    private String dayAbbreviation;
 
     private Integer capacity;
 
@@ -73,16 +73,16 @@ public class Session {
 
     public void setDayOfWeek(DayOfWeek dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
-        this.setDayAbbreviation(dayOfWeek);
+//        this.setDayAbbreviation(dayOfWeek);
     }
 
-    public void setDayAbbreviation(DayOfWeek dayOfWeek) {
-        this.dayAbbreviation = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US);
-    }
-
-    public String getDayAbbreviation() {
-        return this.dayAbbreviation;
-    }
+//    public void setDayAbbreviation(DayOfWeek dayOfWeek) {
+//        this.dayAbbreviation = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US);
+//    }
+//
+//    public String getDayAbbreviation() {
+//        return this.dayAbbreviation;
+//    }
 
     public Integer getCapacity() {
         return capacity;

@@ -31,7 +31,7 @@ public class ReservationService {
                 .findByScheduledTimeGreaterThanAndMemberEmail(currentTime, memberEmail)
                 .forEach(r -> {
                     r.setBooked(true);
-                    r.getSession().setDayAbbreviation(r.getSession().getDayOfWeek()); // Transient day abbreviation
+//                    r.getSession().setDayAbbreviation(r.getSession().getDayOfWeek()); // Transient day abbreviation
                     reservations.add(r);
                     idSet.add(r.getSession().getId());
                 });
@@ -41,7 +41,7 @@ public class ReservationService {
         sessionRepository.findAll().forEach(session -> {
                 if (!idSet.contains(session.getId())) {
                     Reservation reservation = new Reservation();
-                    session.setDayAbbreviation(session.getDayOfWeek()); // Transient day abbreviation
+//                    session.setDayAbbreviation(session.getDayOfWeek()); // Transient day abbreviation
                     reservation.setSession(session);
                     reservation.setBooked(false);
                     reservations.add(reservation);

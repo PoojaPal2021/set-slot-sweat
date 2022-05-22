@@ -52,7 +52,7 @@ class ReservationTests {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		Map<String, String> authMap = new HashMap<>();
-		authMap.put("username", "jardiamj@gymapp.com");
+		authMap.put("username", "unittest@gymapp.com");
 		authMap.put("password", "Password");
 
 		// WHEN: a member attempts to login
@@ -71,7 +71,7 @@ class ReservationTests {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		Map<String, String> authMap = new HashMap<>();
-		authMap.put("username", "jardiamj@gymapp.com");
+		authMap.put("username", "unittest@gymapp.com");
 		authMap.put("password", "XXX");
 
 		// WHEN: a member attempts to login
@@ -94,7 +94,7 @@ class ReservationTests {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		Map<String, String> authMap = new HashMap<>();
-		authMap.put("username", "jardiamj@gymapp.com");
+		authMap.put("username", "unittest@gymapp.com");
 
 		// When: a member attempts to login
 		HttpEntity<Map<String, String>> request = new HttpEntity<>(authMap, headers);
@@ -115,7 +115,7 @@ class ReservationTests {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		Map<String, String> authMap = new HashMap<>();
-		authMap.put("username", "jardiamj@gymapp.com");
+		authMap.put("username", "unittest@gymapp.com");
 		authMap.put("password", "Password");
 
 		// When: a member attempts to login
@@ -132,7 +132,7 @@ class ReservationTests {
 	@Test
 	public void bookingSessionShouldSucceed() {
 		// TODO: setup a member that is only used for testing
-		String email = "jardiamj@gymapp.com";
+		String email = "unittest@gymapp.com";
 		Long sessionIdToBook = 5L;
 		String bookingEndpoint = "http://localhost:" + port +
 				                 "/reservation-service/api/v1/session/book/" + sessionIdToBook +
@@ -143,7 +143,7 @@ class ReservationTests {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		Map<String, String> authMap = new HashMap<>();
-		authMap.put("username", "jardiamj@gymapp.com");
+		authMap.put("username", email);
 		authMap.put("password", "Password");
 		HttpEntity<Map<String, String>> request = new HttpEntity<>(authMap, headers);
 		ResponseEntity<Reservation[]> loginResponse = this.restTemplate.postForEntity(loginEndpoint, request, Reservation[].class);
@@ -176,7 +176,7 @@ class ReservationTests {
 
 	@Test
 	public void bookingSessionAfterLoginOutShouldFail() {
-		String email = "jardiamj@gymapp.com";
+		String email = "unittest@gymapp.com";
 		String logoutEndPoint = "http://localhost:" + port + "/reservation-service/api/v1/member/logout";
 		Long sessionIdToBook = 5L;
 		String bookingEndpoint = "http://localhost:" + port +
@@ -195,7 +195,7 @@ class ReservationTests {
 
 	@Test
 	public void bookingSameSessionTwiceShouldFail() {
-		String email = "jardiamj@gymapp.com";
+		String email = "unittest@gymapp.com";
 		Long sessionIdToBook = 5L;
 		String bookingEndpoint = "http://localhost:" + port +
 				"/reservation-service/api/v1/session/book/" + sessionIdToBook +
@@ -206,7 +206,7 @@ class ReservationTests {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		Map<String, String> authMap = new HashMap<>();
-		authMap.put("username", "jardiamj@gymapp.com");
+		authMap.put("username", email);
 		authMap.put("password", "Password");
 		HttpEntity<Map<String, String>> request = new HttpEntity<>(authMap, headers);
 		ResponseEntity<Reservation[]> loginResponse = this.restTemplate.postForEntity(loginEndpoint, request, Reservation[].class);
@@ -242,7 +242,7 @@ class ReservationTests {
 
 	@Test
 	public void cancelingRecentlyBookedReservationShouldSucceed() {
-		String email = "jardiamj@gymapp.com";
+		String email = "unittest@gymapp.com";
 		String cancellationEndpoint= "http://localhost:" + port +
 				  				      "/reservation-service/api/v1/session/cancel/";
 		Long sessionIdToBook = 5L;
@@ -293,7 +293,7 @@ class ReservationTests {
 
 	@Test
 	public void cancelingUnbookedReservationShouldFail() {
-		String email = "jardiamj@gymapp.com";
+		String email = "unittest@gymapp.com";
 		String cancellationEndpoint= "http://localhost:" + port +
 				"/reservation-service/api/v1/session/cancel/";
 		String loginEndpoint = "http://localhost:" + port + "/reservation-service/api/v1/member/login";
@@ -328,7 +328,7 @@ class ReservationTests {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		Map<String, String> authMap = new HashMap<>();
-		authMap.put("username", "jardiamj@gymapp.com");
+		authMap.put("username", "unittest@gymapp.com");
 		authMap.put("password", "Password");
 
 		// Loging in
