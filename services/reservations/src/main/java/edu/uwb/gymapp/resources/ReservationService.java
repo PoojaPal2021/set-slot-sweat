@@ -4,26 +4,13 @@ import edu.uwb.gymapp.models.Reservation;
 import edu.uwb.gymapp.models.ReservationRepository;
 import edu.uwb.gymapp.models.Session;
 import edu.uwb.gymapp.models.SessionRepository;
-import edu.uwb.gymapp.workoutsession.SessionService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.support.Repositories;
-import org.springframework.http.*;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.beans.factory.annotation.Autowired;;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
@@ -34,10 +21,7 @@ public class ReservationService {
     private ReservationRepository reservationRepository;
 
     @Autowired
-    private WebApplicationContext appContext;
-
-    @Autowired
-    private RestTemplate restTemplate;
+    private SessionRepository sessionRepository;
 
     public List<Reservation> getAllReservations(String memberEmail) {
         List<Reservation> reservations = new ArrayList<>();
@@ -47,21 +31,17 @@ public class ReservationService {
                 .findByScheduledTimeGreaterThanAndMemberEmail(currentTime, memberEmail)
                 .forEach(r -> {
                     r.setBooked(true);
-                    r.getSession().setDayAbbreviation(r.getSession().getDayOfWeek());
+                    r.getSession().setDayAbbreviation(r.getSession().getDayOfWeek()); // Transient day abbreviation
                     reservations.add(r);
                     idSet.add(r.getSession().getId());
                 });
 
         // Add non booked sessions to list with isBooked set to false. We do this so we have one list with all
         // available and booked sessions together.
-        // Todo: Split the sessions logic into a separate microservice. Then, we will call it using a RestTemplate.
-        Repositories repositories = new Repositories(appContext);
-        List<Session> sessions = new ArrayList<>();
-        JpaRepository<Session, Long> sessionRepository = (JpaRepository) repositories.getRepositoryFor(Session.class).get();
         sessionRepository.findAll().forEach(session -> {
                 if (!idSet.contains(session.getId())) {
                     Reservation reservation = new Reservation();
-                    session.setDayAbbreviation(session.getDayOfWeek());
+                    session.setDayAbbreviation(session.getDayOfWeek()); // Transient day abbreviation
                     reservation.setSession(session);
                     reservation.setBooked(false);
                     reservations.add(reservation);
