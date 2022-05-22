@@ -73,8 +73,4 @@ public class MemberDetails implements UserDetails {
     public void setPassword(String password) {
         this.password = password;
     }
-
-//    public String getFullName() {
-//        return username;
-//    }
 }

@@ -92,12 +92,4 @@ public class Reservation {
     public void setSession(Session session) {
         this.session = session;
     }
-
-//    public Member getMember() {
-//        return member;
-//    }
-//
-//    public void setMember(Member member) {
-//        this.member = member;
-//    }
 }

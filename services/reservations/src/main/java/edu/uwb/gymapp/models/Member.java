@@ -18,10 +18,6 @@ public class Member {
 
     private String password;
 
-    // for authentication
-//    private boolean active;
-//    private String roles;
-
 
     private String firstName;
 
