@@ -60,26 +60,28 @@ export class ScheduleSessionService {
   bookSession(singSessionInfo: any, userEmail:string) 
   {
     console.log("INSIDE SERVICE ::  Reserve Session")
-
-    
     const body = JSON.stringify(singSessionInfo);
     console.log("Body ==>", body)
     const params = new HttpParams().set('email', userEmail);
     console.log(" Username param =>",userEmail )
     const headers = { 'Content-Type': 'application/json'};
-    return  this.http.post(apiendpoints.RESERVE_SESSION, body, {headers,params}).pipe(catchError(this.handleError));
+    console.log("APU ==>",apiendpoints.RESERVE_SESSION + singSessionInfo.session.id )
+    return  this.http.post(apiendpoints.RESERVE_SESSION+singSessionInfo.session.id, body, {headers,params}).pipe(catchError(this.handleError));
 
   }
   cancelSession(singSessionInfo: any, userEmail:string) 
   {
     console.log("INSIDE SERVICE ::  Cancel Reservation")
 
-    const body = JSON.stringify(singSessionInfo);
-    console.log("Body ==>", body)
-    const params = new HttpParams().set('email', userEmail);
+    const parameters = new HttpParams().set('email', userEmail);
     console.log(" Username param =>",userEmail )
     const headers = { 'Content-Type': 'application/json'};
-    return  this.http.post(apiendpoints.CANCEL_SESSION, body, {headers,params}).pipe(catchError(this.handleError));
+    const options = {
+      params : parameters
+    }
+    console.log(" OBJECT ********", singSessionInfo)
+    console.log("API ==>",apiendpoints.CANCEL_SESSION + singSessionInfo.id );
+    return  this.http.delete(apiendpoints.CANCEL_SESSION + singSessionInfo.id, options ).pipe(catchError(this.handleError));
 
   }
 

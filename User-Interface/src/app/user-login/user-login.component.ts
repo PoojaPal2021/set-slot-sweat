@@ -13,7 +13,7 @@ export class UserLoginComponent implements OnInit {
 
   authenticatedUser = false;
   hideLoginForm: boolean = false;
-  showloginTemp:boolean = false;
+  showloginTemp: boolean = false;
   userEmail: string = "";
 
 
@@ -21,7 +21,7 @@ export class UserLoginComponent implements OnInit {
   singSessionInfo: any;
 
   /*arra holding 7 days from now */
-  weekDaysFrmTdy : any = new Array(7);
+  weekDaysFrmTdy: any = new Array(7);
 
 
   enableBookButton: boolean = true;
@@ -39,10 +39,10 @@ export class UserLoginComponent implements OnInit {
   }
 
   loadProfile(loginForm: FormGroup) {
-    
+
     console.log("Login Form .. cannot stringify  -->", loginForm);
-    this.userEmail= loginForm.value['email'];
-    
+    this.userEmail = loginForm.value['email'];
+
     // if (!this.authenticatedUser) {
     // console.log(" Flag  and inside IF  ==>", this.authenticatedUser)
     // console.log("Noq ==>", this.now)
@@ -60,16 +60,17 @@ export class UserLoginComponent implements OnInit {
     //   }
     // );
     this.scheduleSessionService.authenticateAndloadProfileData(loginForm).subscribe((data: any) => {
-      console.log(data);
+
       this.hideLoginForm = true;
       this.showloginTemp = true;
 
 
       this.sessionInfo = data;
+      console.log("LOADED DATA =>", this.sessionInfo);
       if (this.sessionInfo != undefined) {
         this.getWeekdays();
         this.convertDateTo12hFormat(this.sessionInfo);
-        
+
       }
     })
 
@@ -89,48 +90,45 @@ export class UserLoginComponent implements OnInit {
     //     singleSessionInfo.session.startTime = timeString12hr.toString(); 
     // });
     //  allsessionInfo.forEach(singleSessionInfo => {
-      
+
     //   if singleSessionInfo.session.dayOfWeek == 'MONDAY'
     // });
 
   }
 
-  
+
 
 
 
   bookSession(singSessionInfo: any) {
     console.log(" User logged in ===>", this.userEmail)
     singSessionInfo.booked = true;
-    this.scheduleSessionService.bookSession(singSessionInfo, this.userEmail)
+    this.scheduleSessionService.bookSession(singSessionInfo, this.userEmail).subscribe((data: any) => {
+      console.log("RESPONSE FROM BACKEND ON booking", data);
+      this.sessionInfo = data;
+    })
 
   }
 
   cancelSession(singSessionInfo: any) {
     console.log(" User logged in ===>", this.userEmail)
+    console.log(" reservation Id =>", this.sessionInfo)
     singSessionInfo.booked = false;
-    this.scheduleSessionService.cancelSession(singSessionInfo, this.userEmail)
+    this.scheduleSessionService.cancelSession(singSessionInfo, this.userEmail);
   }
 
-  getWeekdays() 
-  {
-  var dayNames = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
-  var today = new Date();
-  console.log ( "today", today.getDay());
-  var day:number;
-  for ( day=0; day<=6; day++)
-  {
-    console.log(" today =>",today.getDay())
-    console.log( "days added", day);
-    console.log("position value =>",((today.getDay()+day)%7) )
-    console.log(" final computed day =>",dayNames[((today.getDay()+day)%7)-1])
+  getWeekdays() {
+    var dayNames = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']; 
+    var today = new Date();
+    console.log("today", today.getDay());
+    var todayNum = today.getDay() - 1;
+    var day: number;
+    for (day = 0; day <= 6; day++) // 0 , 1, 2, 3, 4, 5, 6
     {
-      this.weekDaysFrmTdy[day]=(dayNames[((today.getDay()+day)%7)-1]);
+      {
+        this.weekDaysFrmTdy[day] = (dayNames[((todayNum + day) % 7)]);
+      }
     }
-    
   }
-  console.log("7 DAYS from now ==>",this.weekDaysFrmTdy );
-  }
-
 }
 
