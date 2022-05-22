@@ -47,7 +47,6 @@ public class ReservationService {
                 .findByScheduledTimeGreaterThanAndMemberEmail(currentTime, memberEmail)
                 .forEach(r -> {r.setBooked(true); reservations.add(r); idSet.add(r.getSession().getId());});
 
-        System.out.println(idSet);
         // Add non booked sessions to list with isBooked set to false. We do this so we have one list with all
         // available and booked sessions together.
         // Todo: Split the sessions logic into a separate microservice. Then, we will call it using a RestTemplate.
