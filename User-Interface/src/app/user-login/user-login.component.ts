@@ -4,6 +4,10 @@ import { schedule } from '../models/schedule';
 import {upcomingSchedule} from '../models/upcomingSchedule'
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { getLocaleCurrencyName, getLocaleDateFormat, getLocaleDayNames, getLocaleWeekEndRange } from '@angular/common';
+import { graphData } from '../models/analytics';
+import { ChartType, ChartOptions } from 'chart.js';
+import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
+
 @Component({
   selector: 'app-user-login',
   templateUrl: './user-login.component.html',
@@ -26,6 +30,34 @@ export class UserLoginComponent implements OnInit {
   /*arra holding 7 days from now */
   weekDaysFrmTdy: any = new Array(7);
 
+  /*Graph mapping*/
+  public pieChartOptions: ChartOptions = {
+    responsive: true,
+    
+  };
+  public pieChartLabels: Label[] = [];
+  public pieChartData: SingleDataSet = [];
+  public pieChartType: ChartType = 'pie';
+  public pieChartLegend = true;
+  public pieChartPlugins = [];
+   
+  historyData: graphData |undefined;
+  categorisedHistory = [];
+  totalSessionConducted:number |undefined;
+  totalSessionAttended:number|undefined;
+  favoriteSession:string |undefined;
+
+  public chartColors: Array<any> = [
+    { // all colors in order
+      backgroundColor: ['#9dc5a8', '#5d946c', '#89ab80c3', '#8d944fc3', '9cb664']
+    }
+]
+  
+
+
+
+
+
 
   enableBookButton: boolean = true;
   now: any = new Date();
@@ -36,7 +68,10 @@ export class UserLoginComponent implements OnInit {
     }
   );
 
-  constructor(private scheduleSessionService: ScheduleSessionService) { }
+  constructor(private scheduleSessionService: ScheduleSessionService) {
+    monkeyPatchChartJsTooltip();
+    monkeyPatchChartJsLegend();
+   }
 
   ngOnInit(): void {
   }
@@ -76,7 +111,7 @@ export class UserLoginComponent implements OnInit {
       if (this.sessionInfo != undefined) {
         this.getWeekdays();
         this.convertDateTo12hFormat(this.sessionInfo);
-
+        this.genHistoryReports()
       }
     })
     this.scheduleSessionService.authenticateAndloadUpcomingSessions(this.userEmail).subscribe((data: any) => {
@@ -116,9 +151,10 @@ export class UserLoginComponent implements OnInit {
 
   bookSession(singSessionInfo: any) {
     console.log(" User logged in ===>", this.userEmail)
-    singSessionInfo.booked = true;
+    
     this.scheduleSessionService.bookSession(singSessionInfo, this.userEmail).subscribe((data: any) => {
       console.log("RESPONSE FROM BACKEND ON booking", data);
+      singSessionInfo.booked = true;
       this.sessionInfo = data;
     })
 
@@ -127,12 +163,51 @@ export class UserLoginComponent implements OnInit {
   cancelSession(singSessionInfo: any) {
     console.log(" User logged in ===>", this.userEmail)
     console.log(" reservation Id =>", this.sessionInfo)
-    singSessionInfo.booked = false;
-    this.scheduleSessionService.cancelSession(singSessionInfo, this.userEmail);
+   
+    this.scheduleSessionService.cancelSession(singSessionInfo, this.userEmail).subscribe((data: any) => {
+      console.log("RESPONSE FROM BACKEND ON booking", data);
+      singSessionInfo.booked = false;
+    });
   }
 
+  updateUserDetails()
+  {
+    console.log("Addded", this.userEmail)
+  }
+
+
+  
+genHistoryReports()
+{
+      
+      let sessionNumbers: number[] = Array();
+      this.scheduleSessionService.genHistoryReports(this.userEmail).subscribe((data: any) => 
+      {
+        this.hideLoginForm = true;
+        this.showloginTemp = true;
+        this.historyData = data;
+        this.totalSessionConducted = this.historyData?.totalSessions;
+        this.totalSessionAttended = this.historyData?.totalAttended;
+        
+        console.log("HISTORY DATA  =>", this.historyData);
+        this.historyData?.workoutHistory.forEach(element => {
+          this.pieChartLabels.push(element.name);
+          this.pieChartData.push(element.attended);
+          sessionNumbers.push(element.attended);
+       });
+       
+       
+       console.log(" FAvourite Session ==>", this.pieChartLabels[sessionNumbers.indexOf(Math.max(...sessionNumbers))]);
+       this.favoriteSession = this.pieChartLabels[sessionNumbers.indexOf(Math.max(...sessionNumbers))].toString();
+       console.log(" Pie chart data ==>", this.pieChartData);
+      });
+}
+ 
+
+
+  
   getWeekdays() {
-    var dayNames = ['SUN', 'MON', 'TUE', 'WED', 'THUR', 'FRI', 'SAT' ]; 
+    var dayNames = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT' ]; 
     var today = new Date();
     console.log("today", today.getDay());
     var todayNum = today.getDay(); // 0 - SUNDAY , 6-Saturday

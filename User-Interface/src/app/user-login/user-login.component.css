@@ -82,5 +82,22 @@
   margin-bottom: 100px;
   margin-left: 15px;
 }
+.userMenuItem{
+  background-color: #5fafa2 !important;
+  margin-top: 2px;
+}
+.logInButton
+{
+  background-color: #5fafa2 !important;;
+}
+.historyInfo{
+ background-color: #5fafa2;
+ max-width: 400px;
+ float:right
+}
+.chart
+{
+  margin: 20px;
+}
 
 

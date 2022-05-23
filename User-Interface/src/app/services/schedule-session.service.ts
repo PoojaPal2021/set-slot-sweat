@@ -93,6 +93,13 @@ export class ScheduleSessionService {
     return  this.http.delete(apiendpoints.CANCEL_SESSION + singSessionInfo.id, options ).pipe(catchError(this.handleError));
 
   }
+  genHistoryReports(userEmail:string)
+  {
+    console.log("INSIDE SERVICE ::genHistoryReports ")
+    const params = new HttpParams().set('email', userEmail);
+    const headers = { 'Content-Type': 'application/json' };
+    return  this.http.get(apiendpoints.GET_SESSION_HISTORY, {headers, params}).pipe(catchError(this.handleError));
+  }
 
   handleError(error: HttpErrorResponse) 
   {

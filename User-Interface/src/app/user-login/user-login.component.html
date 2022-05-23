@@ -36,18 +36,29 @@
 
 
 <div class="userIcon" *ngIf="showloginTemp" >
-      <button mat-icon-button color="green" aria-label="Example icon button with a home icon">
+      <button mat-icon-button color="green"  [matMenuTriggerFor]="userMenu">
         <span style="margin-right: 10px;">{{userEmail}}</span>
-        <mat-icon>home</mat-icon>
+        <mat-icon>account_circle</mat-icon>
       </button>
+      <mat-menu #userMenu="matMenu" class="userMenuItem">
+        <!-- disabled -->
+        <button mat-menu-item (click)="updateUserDetails()" class="userMenuItem">
+          <mat-icon>reorder</mat-icon>
+          <span>Account Details</span>
+        </button>
+        <button mat-menu-item routerLink="/"  class="userMenuItem">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Log out</span>
+        </button>
+      </mat-menu>
 </div>
 
 
 <div class="ScheduleTemplate" *ngIf="showloginTemp" >
   <mat-tab-group >
-    <mat-tab label="Upcoming Sessions">
+    <mat-tab label="Upcoming Sessions" >
       <div *ngFor="let eachUpcomingSession of upcomingSessionInfo; ">
-        <mat-card class="example-card" >
+        <mat-card class="example-card" *ngIf="eachUpcomingSession.booked">
           <mat-card-title-group>
           <img mat-card-md-image src="../../assets/images/gym_logo.png" >
           <mat-card-title> {{eachUpcomingSession.session.workout.name}}</mat-card-title>
@@ -68,7 +79,7 @@
           <div style="margin-top: 15px;"> 
             <!-- *ngIf="!singSessionInfo.sStatus" --> 
             
-            <button mat-raised-button  class="cancelButton" (click)="cancelSession(eachUpcomingSession)" *ngIf="eachUpcomingSession.booked" > Cancel</button>   
+            <button mat-raised-button  class="cancelButton" (click)="cancelSession(eachUpcomingSession)"  *ngIf="eachUpcomingSession.booked" > Cancel</button>   
             <!-- (click)="bookSession(singSessionInfo)" -->
         </div>
             
@@ -82,12 +93,13 @@
     <mat-tab label="Manage Sessions">
          
           <input type="hidden" #selection>
-          <a class="card-container"  *ngFor="let weekday of weekDaysFrmTdy"  >
+          <a class="card-container"  *ngFor="let weekday of weekDaysFrmTdy; let i = index"  >
                 <button mat-fab  (click)="selection.value = weekday"  tabindex="0"> 
                     <!-- <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> -->
                     <span> <strong>{{weekday}}</strong></span>
                 </button>
-              </a>
+          </a>
+              
 
 
           <div class="terminal" [ngSwitch]="selection.value" >
@@ -271,8 +283,6 @@
               </div>
             </a>
 
-          
-
             <a *ngSwitchCase="'SAT'">
               <div *ngFor="let singSessionInfo of sessionInfo; ">
                 <mat-card class="example-card"   *ngIf="selection.value == singSessionInfo.session.dayOfWeek.slice(0,3)">
@@ -308,6 +318,7 @@
                 </mat-card>
               </div>
             </a>
+
             <a *ngSwitchCase="'SUN'">
               <div *ngFor="let singSessionInfo of sessionInfo; ">
                 <mat-card class="example-card"   *ngIf="selection.value == singSessionInfo.session.dayOfWeek.slice(0,3)">
@@ -342,13 +353,48 @@
                   <br/>
                 </mat-card>
               </div>
-            </a>
+            </a >
+
           </div>
+          
 
       
     </mat-tab>
+    <mat-tab label="Reports">
+      
+      <div class="chart" *ngIf="pieChartLabels.length > 0">
+            <canvas baseChart 
+            [data]="pieChartData"
+            [labels]="pieChartLabels"
+            [chartType]="pieChartType"
+            [options]="pieChartOptions"
+            [plugins]="pieChartPlugins"
+            [legend]="pieChartLegend"
+            [colors]="chartColors">
+          </canvas>
+          <br/>
+          <mat-card class="historyInfo">
+            <span> Total Session Attended : </span>
+            <strong> {{totalSessionAttended}} </strong>
+            <br/>
+            <span> 
+              <mat-icon [ngStyle]="{'color':'red'}">favorite</mat-icon>
+              <strong > {{favoriteSession}} </strong>
+             </span>
+          </mat-card>
+          
+    </div>
+    </mat-tab>
   </mat-tab-group>
+
 </div>
+
+
+
+
+
+
+
 
 
 

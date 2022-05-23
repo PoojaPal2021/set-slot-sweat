@@ -14,6 +14,10 @@ import {ScheduleSessionService} from './services/schedule-session.service';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTabsModule} from '@angular/material/tabs'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatMenuModule} from '@angular/material/menu';
+import { ChartsModule } from 'ng2-charts';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +34,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatIconModule,
     MatTabsModule,
     BrowserAnimationsModule,
+    MatMenuModule,
+    ChartsModule,
     RouterModule.forRoot([
+      {path: '', component:AppComponent},
       { path: 'register', component: UserRegistrationComponent},
       { path: 'login', component: UserLoginComponent}
 

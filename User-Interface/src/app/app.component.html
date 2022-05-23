@@ -299,15 +299,16 @@
   <div class="spacer"></div>
 </div>
   
-<div class="content" role="main" (status)="false" (change)="countChangedHandler($event)">
+<div class="content" role="main" (status)="false" (change)="countChangedHandler($event)" >
+  <!-- *ngIf=" initialLoadStatus" -->
   <h1 class="animate-charcter">ELEVATE</h1>
   <h1 class="animate-charcter">FITNESS to next level</h1>
 
   <div class="card-container" *ngIf="true" >
-    <div class="card" target="_blank" rel="noopener" routerLink="/register">
+    <div class="card" target="_blank" rel="noopener" routerLink="/register" >
       <span>New visitor??? Sign-up today.</span>
     </div>
-    <div class="card" target="_blank" rel="noopener" routerLink="/login">
+    <div class="card" target="_blank" rel="noopener" routerLink="/login" >
       <span>Already a Gym member??? Login here.</span>
     </div>
   </div>
