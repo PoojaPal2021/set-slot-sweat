@@ -3,6 +3,7 @@ package edu.uwb.gymapp.resources;
 import edu.uwb.gymapp.models.Reservation;
 import edu.uwb.gymapp.models.ResponseMessage;
 import edu.uwb.gymapp.models.Session;
+import edu.uwb.gymapp.models.SessionHistory;
 import edu.uwb.gymapp.workoutsession.SessionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -186,6 +187,24 @@ public class ReservationController {
         logger.info("All reservations have been retrieved for user: " + email);
         return reservationService.getAllBookedReservations(email);
     }
+
+    /**
+     * Retrieve a summary of the reservation history of the given member, since they joined the gym
+     * @param email The email of the gym member
+     * @return  The history of the member's reservations since they joined the gym
+     */
+    @RequestMapping(value="/reservations/history", params="email", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public SessionHistory getReservationHistory(@RequestParam("email") String email) {
+        // Verify that we are accessing the reservations for the current user
+        if (authentication == null || !authentication.getName().equals(email)) {
+            logger.debug("Blocked reservations access to user: " + email);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access not allowed for: " + email);
+        }
+
+        logger.info("Reservation history has been retrieved for user: " + email);
+        return reservationService.getHistory(email);
+    }
+
 
     /**
      * Retrieve the list of reservations
