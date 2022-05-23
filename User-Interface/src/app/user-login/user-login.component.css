@@ -56,6 +56,31 @@
   min-width: 90px;
   margin : 14px
 }
+.cancelButton
+{
+  background-color: #24574b;
+  color: white;
+  
+}
+.bookButton
+{
+  background-color: #3abfa0;
+  color: black;
+  
+}
 
+.userIcon
+{
+  width:250px;
+  float: right;
+  margin-right:100px;
+  margin-top:20px;
+  color:black;
+}
+
+.mat-tab-group {
+  margin-bottom: 100px;
+  margin-left: 15px;
+}
 
 

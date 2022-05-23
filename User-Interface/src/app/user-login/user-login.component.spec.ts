@@ -57,15 +57,15 @@ describe('UserLoginComponent', () => {
     expect(component.authenticatedUser).toBe(false)
   })
 
-  it('should autheticate the user', () => {
-    const loginData = {
-      "email": "bobby@bobby.com",
-      "pwd": "poojapal@123"
-    };
-    component.loginForm.setValue(loginData);
-    component.loadProfile()
-    expect(loginServiceSpy.authenticateUser).toHaveBeenCalledWith(component.loginForm);
-  });
+  // it('should autheticate the user', () => {
+  //   const loginData = {
+  //     "email": "bobby@bobby.com",
+  //     "pwd": "poojapal@123"
+  //   };
+  //   component.loginForm.setValue(loginData);
+  //   component.loadProfile()
+  //   expect(loginServiceSpy.authenticateUser).toHaveBeenCalledWith(component.loginForm);
+  // });
 
   // it('should load profile for authenticatedUser', () => {
   //   component.loadProfile()

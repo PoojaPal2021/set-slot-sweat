@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -6,6 +6,18 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  // ngOnInit(): void {
+  //   throw new Error('Method not implemented.');
+  // }
   title = 'set-slot-sweat';
-  homeTemp: boolean = false;
+  status :boolean =false;
+
+  onActivate(event : any) {
+    
+  }
+  countChangedHandler(event:any) {
+  
+    console.log(" event value ", event);
+    this.status = event;
+  }
 }

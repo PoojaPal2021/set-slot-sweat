@@ -43,6 +43,15 @@ export class ScheduleSessionService {
     return  this.http.post(apiendpoints.REGISTER_TRAINER_URL, body, {headers}).pipe(catchError(this.handleErrorSignUp));
 
   }
+  
+  authenticateAndloadUpcomingSessions(userEmail:string)
+  {
+      console.log("INSIDE SERVICE ::authenticateAndloadUpcomingSessions ")
+      const params = new HttpParams().set('email', userEmail);
+      const headers = { 'Content-Type': 'application/json' };
+      return  this.http.get(apiendpoints.LOAD_UPCOMING_SESSIONS, {headers, params}).pipe(catchError(this.handleError));
+  }
+
 
   authenticateAndloadProfileData(loginForm: FormGroup) 
   {

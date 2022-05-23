@@ -1,6 +1,7 @@
-import { Component, OnInit, ɵɵsetComponentScope } from '@angular/core';
+import { Component, OnInit,Output,EventEmitter, ɵɵsetComponentScope } from '@angular/core';
 import { ScheduleSessionService } from '../services/schedule-session.service';
 import { schedule } from '../models/schedule';
+import {upcomingSchedule} from '../models/upcomingSchedule'
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { getLocaleCurrencyName, getLocaleDateFormat, getLocaleDayNames, getLocaleWeekEndRange } from '@angular/common';
 @Component({
@@ -9,8 +10,10 @@ import { getLocaleCurrencyName, getLocaleDateFormat, getLocaleDayNames, getLocal
   styleUrls: ['./user-login.component.css']
 })
 export class UserLoginComponent implements OnInit {
+  @Output() loginStatus: EventEmitter<boolean> =   new EventEmitter();
   sessionInfo: schedule[] | undefined;
-
+  upcomingSessionInfo: schedule[] | undefined;
+  
   authenticatedUser = false;
   hideLoginForm: boolean = false;
   showloginTemp: boolean = false;
@@ -39,9 +42,11 @@ export class UserLoginComponent implements OnInit {
   }
 
   loadProfile(loginForm: FormGroup) {
+    
 
     console.log("Login Form .. cannot stringify  -->", loginForm);
     this.userEmail = loginForm.value['email'];
+    
 
     // if (!this.authenticatedUser) {
     // console.log(" Flag  and inside IF  ==>", this.authenticatedUser)
@@ -59,12 +64,13 @@ export class UserLoginComponent implements OnInit {
     //     this.authenticatedUser = true;
     //   }
     // );
+    
     this.scheduleSessionService.authenticateAndloadProfileData(loginForm).subscribe((data: any) => {
 
       this.hideLoginForm = true;
       this.showloginTemp = true;
-
-
+      
+      this.loginStatus.emit(this.hideLoginForm);
       this.sessionInfo = data;
       console.log("LOADED DATA =>", this.sessionInfo);
       if (this.sessionInfo != undefined) {
@@ -73,6 +79,14 @@ export class UserLoginComponent implements OnInit {
 
       }
     })
+    this.scheduleSessionService.authenticateAndloadUpcomingSessions(this.userEmail).subscribe((data: any) => {
+
+      this.hideLoginForm = true;
+      this.showloginTemp = true;
+
+      this.upcomingSessionInfo = data;
+      console.log("LOADED UPCOMING SESSION DATA =>", this.upcomingSessionInfo);
+    });
 
     this.loginForm.reset()
 
@@ -118,16 +132,16 @@ export class UserLoginComponent implements OnInit {
   }
 
   getWeekdays() {
-    var dayNames = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']; 
+    var dayNames = ['SUN', 'MON', 'TUE', 'WED', 'THUR', 'FRI', 'SAT' ]; 
     var today = new Date();
     console.log("today", today.getDay());
-    var todayNum = today.getDay() - 1;
+    var todayNum = today.getDay(); // 0 - SUNDAY , 6-Saturday
+  
+    console.log("TODAY NUM ===>", todayNum)
     var day: number;
-    for (day = 0; day <= 6; day++) // 0 , 1, 2, 3, 4, 5, 6
+    for (day = 0; day <= 6; day++) // today+0 = today , today +1 = tomorrow
     {
-      {
-        this.weekDaysFrmTdy[day] = (dayNames[((todayNum + day) % 7)]);
-      }
+        this.weekDaysFrmTdy[day] = (dayNames[(todayNum+day)%7]);  
     }
   }
 }

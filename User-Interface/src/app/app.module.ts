@@ -11,8 +11,9 @@ import { HttpClientModule } from '@angular/common/http';
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
 import {ScheduleSessionService} from './services/schedule-session.service';
-
-
+import {MatIconModule} from '@angular/material/icon';
+import {MatTabsModule} from '@angular/material/tabs'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,6 +27,9 @@ import {ScheduleSessionService} from './services/schedule-session.service';
     HttpClientModule,
     MatCardModule,
     MatButtonModule,
+    MatIconModule,
+    MatTabsModule,
+    BrowserAnimationsModule,
     RouterModule.forRoot([
       { path: 'register', component: UserRegistrationComponent},
       { path: 'login', component: UserLoginComponent}

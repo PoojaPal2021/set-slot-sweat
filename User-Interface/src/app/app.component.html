@@ -298,8 +298,8 @@
   <span><strong>Set-Slot-Sweat</strong></span>
   <div class="spacer"></div>
 </div>
-
-<div class="content" role="main">
+  
+<div class="content" role="main" (status)="false" (change)="countChangedHandler($event)">
   <h1 class="animate-charcter">ELEVATE</h1>
   <h1 class="animate-charcter">FITNESS to next level</h1>
 
@@ -312,7 +312,11 @@
     </div>
   </div>
 </div>
-  <router-outlet></router-outlet>
+<div >
+  <router-outlet (activate)="onActivate($event)" >
+  </router-outlet>
+</div>
+  
 
   <svg id="clouds" xmlns="http://www.w3.org/2000/svg" width="2611.084" height="485.677" viewBox="0 0 2611.084 485.677">
     <title>Gray Clouds Background</title>
