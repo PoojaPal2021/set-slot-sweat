@@ -30,6 +30,10 @@
  </div>
  
 </form>
+<div  onclick="this.style.display='none'" *ngIf='loginErrorMessage.length > 0' class="Emessage">
+  {{loginErrorMessage}}
+   <span  style="float: right; margin-right: 10px;" > <strong>  &times;</strong></span>  
+</div>
 
 </div>
 
@@ -46,7 +50,7 @@
           <mat-icon>reorder</mat-icon>
           <span>Account Details</span>
         </button>
-        <button mat-menu-item routerLink="/"  class="userMenuItem">
+        <button mat-menu-item routerLink="/logout"  class="userMenuItem">
           <mat-icon>exit_to_app</mat-icon>
           <span>Log out</span>
         </button>
@@ -91,7 +95,8 @@
 
     </mat-tab>
     <mat-tab label="Manage Sessions">
-         
+      
+      
           <input type="hidden" #selection>
           <a class="card-container"  *ngFor="let weekday of weekDaysFrmTdy; let i = index"  >
                 <button mat-fab  (click)="selection.value = weekday" tabindex="0" [class.active]="selection.value === weekday"> 
@@ -306,6 +311,7 @@
                     <div style="margin-top: 15px;"> 
                       <!-- *ngIf="!singSessionInfo.sStatus" --> 
                       <button mat-raised-button class="bookButton" (click)="bookSession(singSessionInfo, 'manage')"  *ngIf="!singSessionInfo.booked"> Reserve </button> &nbsp; &nbsp; 
+    
                       <button mat-raised-button  class="cancelButton" (click)="cancelSession(singSessionInfo,'manage')" *ngIf="singSessionInfo.booked" > Cancel</button>   
                       <!-- (click)="bookSession(singSessionInfo)" -->
                   </div>
@@ -356,6 +362,8 @@
             </a >
 
           </div>
+
+          
           
 
       
@@ -386,6 +394,7 @@
     </div>
     </mat-tab>
   </mat-tab-group>
+
 
 </div>
 

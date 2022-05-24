@@ -39,7 +39,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     ChartsModule,
     MatDialogModule,
     RouterModule.forRoot([
-      {path: '', component:AppComponent},
+      {path: 'logout', component:AppComponent},
       { path: 'register', component: UserRegistrationComponent},
       { path: 'login', component: UserLoginComponent}
 

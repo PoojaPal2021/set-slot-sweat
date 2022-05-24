@@ -50,8 +50,16 @@
          </label>
       
       </ul>
-<button class="SignUp" type="submit" [disabled]="!profileForm.valid"><strong>Sign Up</strong></button>  
+<button class="SignUp" type="submit" [disabled]="!profileForm.valid"><strong>Sign Up</strong>  </button> 
  </form>
+ <div  onclick="this.style.display='none'" *ngIf='successMessage.length > 0' class="Smessage">
+   {{successMessage}}
+    <span  style="float: right; margin-right: 10px;" > <strong>  &times;</strong></span>  
+ </div>
+ <div  onclick="this.style.display='none'" *ngIf='errorMessage.length > 0' class="Emessage">
+   {{errorMessage}}
+    <span  style="float: right; margin-right: 10px;" > <strong>  &times;</strong></span>  
+ </div>
 <br/>
 <br/>
  <footer>
@@ -59,7 +67,5 @@
    </a>
 </footer>
 
-
-
-
+   
 </div>

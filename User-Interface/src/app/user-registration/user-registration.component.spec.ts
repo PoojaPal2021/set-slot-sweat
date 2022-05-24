@@ -90,7 +90,7 @@ describe("UserRegistrationComponent", () => {
       "type": "trainer"
     };
     component.profileForm.setValue(formData);
-    component.registerNewMember();
+    component.registerNewUser(component.profileForm);
 
     expect(authServiceSpy.registerUser).toHaveBeenCalledWith(formData);
   })

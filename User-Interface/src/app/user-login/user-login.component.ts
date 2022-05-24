@@ -7,7 +7,7 @@ import { getLocaleCurrencyName, getLocaleDateFormat, getLocaleDayNames, getLocal
 import { graphData } from '../models/analytics';
 import { ChartType, ChartOptions } from 'chart.js';
 import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
-
+import {MatDialog} from '@angular/material/dialog';
 @Component({
   selector: 'app-user-login',
   templateUrl: './user-login.component.html',
@@ -17,6 +17,9 @@ export class UserLoginComponent implements OnInit {
   @Output() loginStatus: EventEmitter<boolean> = new EventEmitter();
   sessionInfo: schedule[] | undefined;
   upcomingSessionInfo: schedule[] | undefined;
+  successMessage:any="";
+  loginErrorMessage:any="";
+  // bookingErrorMessage:any="";
 
   authenticatedUser = false;
   hideLoginForm: boolean = false;
@@ -49,7 +52,7 @@ export class UserLoginComponent implements OnInit {
 
   public chartColors: Array<any> = [
     { // all colors in order
-      backgroundColor: ['#9dc5a8', '#5d946c', '#89ab80c3', '#8d944fc3', '9cb664']
+      backgroundColor: ['#9dc5a8', '#5d946c', '#89ab80c3', '#8d944fc3', '#536157','#649472', '#7c9583' ]
     }
   ]
 
@@ -63,7 +66,7 @@ export class UserLoginComponent implements OnInit {
     }
   );
 
-  constructor(private scheduleSessionService: ScheduleSessionService) {
+  constructor(private scheduleSessionService: ScheduleSessionService, public dialog: MatDialog) {
     monkeyPatchChartJsTooltip();
     monkeyPatchChartJsLegend();
   }
@@ -75,33 +78,56 @@ export class UserLoginComponent implements OnInit {
 
     console.log("Login Form .. cannot stringify  -->", loginForm);
     this.userEmail = loginForm.value['email'];
-
     this.loadManageData();
-    this.loadUpcomingSessionData();
+    
+    console.log("LOAD")
+    console.log(" Before calling the loadupcoming", this.showloginTemp)
 
-  
+        
+      
+    
+
   }
 
   loadManageData(){
+    this.loginErrorMessage ="";
 
     console.log(" Cred ==>", this.loginForm.value['email'],   "", this.loginForm.value['password'])
-    this.scheduleSessionService.authenticateAndloadProfileData(this.loginForm).subscribe((data: any) => {
-      this.hideLoginForm = true;
-      this.showloginTemp = true;
-
-      this.loginStatus.emit(this.hideLoginForm);
-      this.sessionInfo = data;
-      console.log("LOADED DATA =>", this.sessionInfo);
-      if (this.sessionInfo != undefined) {
-        this.getWeekdays();
-        this.convertDateTo12hFormat(this.sessionInfo);
-        this.genHistoryReports()
-      }
-    })
+    this.scheduleSessionService.authenticateAndloadProfileData(this.loginForm)
+    .subscribe(
+      (data: any) => 
+        {
+          console.log("DATA")
+            this.hideLoginForm = true;
+            this.showloginTemp = true;
+           
+            console.log(" making true in data")
+            this.loginStatus.emit(this.hideLoginForm);
+            this.sessionInfo = data;
+            console.log("LOADED DATA =>", this.sessionInfo);
+            if (this.sessionInfo != undefined) 
+            {
+              this.getWeekdays();
+              this.convertDateTo12hFormat(this.sessionInfo);
+              this.genHistoryReports()
+            }
+            this.loadUpcomingSessionData();
+        },
+      (error : any) =>
+        {
+          console.log("ERROR")
+            console.log(" making false in error")
+            this.showloginTemp = false;
+            this.loginErrorMessage = error;
+            console.log (" Login error message ===>", this.loginErrorMessage)
+        }
+    )
   }
 
   loadUpcomingSessionData()
   {
+    console.log(" Inside upcoming component");
+    this.loginErrorMessage ="";
     this.scheduleSessionService.authenticateAndloadUpcomingSessions(this.userEmail).subscribe((data: any) => {
 
       this.hideLoginForm = true;
@@ -134,30 +160,42 @@ export class UserLoginComponent implements OnInit {
   bookSession(singSessionInfo: any, tab: string) {
     console.log(" User logged in ===>", this.userEmail)
 
-    this.scheduleSessionService.bookSession(singSessionInfo, this.userEmail).subscribe((data: any) => {
+    this.scheduleSessionService.bookSession(singSessionInfo, this.userEmail)
+    .subscribe((data: any) => {
       console.log("RESPONSE FROM BACKEND ON booking", data);
       singSessionInfo.booked = true;
       this.sessionInfo = data;
-    });
 
-    if (tab == 'manage') {
-      this.loadUpcomingSessionData();
+      if (tab == 'manage') {
+        console.log(" Tab value ====>", tab)
+        this.loadUpcomingSessionData();
+      }
+    },
+    (error : any )=>{
     }
+    );
 
+    
   }
+  // openDialog() {
+  //   this.dialog.open(DialogElementsExampleDialog);
+  // }
 
   cancelSession(singSessionInfo: any, tab: string) {
 
     this.scheduleSessionService.cancelSession(singSessionInfo, this.userEmail).subscribe((data: any) => {
       console.log("RESPONSE FROM BACKEND ON booking", data);
       singSessionInfo.booked = false;
+
+      if (tab == 'upcoming') {
+        this.loadManageData();
+      }else if (tab == 'manage'){
+        this.loadUpcomingSessionData();
+      }
+
     });
 
-    if (tab == 'upcoming') {
-      this.loadManageData();
-    }else if (tab == 'manage'){
-      this.loadUpcomingSessionData();
-    }
+   
   }
 
   updateUserDetails() {

@@ -52,6 +52,38 @@
 
 
 
+.alert-danger {
+  background-color: #f44336; /* Red */
+}
+.alert-success {
+  background-color: #36f456;  
+} 
+.alert{
+  padding: 20px;
+  color: white;
+  margin-bottom: 15px;
+  text-align: center;
+}
+.Smessage{
+  background-color:rgb(121, 194, 121); 
+  color:balck; 
+  font-weight: bold;
+   margin-left: 20px;margin-top:20px; 
+   height: fit-content;
+   text-align: center;
+}
+.Emessage{
+  background-color:rgb(203, 129, 129) ;
+  color:balck; 
+  font-weight: bold;
+   margin-left: 20px;margin-top:20px; 
+   height: fit-content;
+   text-align: center;
+}
+
+
+
+
 
 
 

@@ -15,7 +15,7 @@ export class ScheduleSessionService {
   configUrl = 'assets/config.json';
   constructor(private http: HttpClient) { }
 
-  registerNewMember(profile: FormGroup) 
+  registerNewMember(profile: FormGroup)
   {
     console.log("INSIDE SERVICE ::registerNewMember ")
 
@@ -30,7 +30,7 @@ export class ScheduleSessionService {
     return  this.http.post(apiendpoints.REGISTER_MEMBER_URL, body, {headers}).pipe(catchError(this.handleErrorSignUp));
   }
 
-  registerNewTrainer(profile: FormGroup)
+  registerNewTrainer(profile: FormGroup): Observable<any>
   {
     console.log("INSIDE SERVICE ::registerNewTrainer ")
     const headers = { 'Content-Type': 'application/json'  };
@@ -44,7 +44,7 @@ export class ScheduleSessionService {
 
   }
   
-  authenticateAndloadUpcomingSessions(userEmail:string)
+  authenticateAndloadUpcomingSessions(userEmail:string): Observable<any>
   {
       console.log("INSIDE SERVICE ::authenticateAndloadUpcomingSessions ")
       const params = new HttpParams().set('email', userEmail);
@@ -53,7 +53,7 @@ export class ScheduleSessionService {
   }
 
 
-  authenticateAndloadProfileData(loginForm: FormGroup) 
+  authenticateAndloadProfileData(loginForm: FormGroup) : Observable<any>
   {
       console.log("INSIDE SERVICE ::authenticateAndloadProfileData ")
   
@@ -66,7 +66,7 @@ export class ScheduleSessionService {
   }
 
   
-  bookSession(singSessionInfo: any, userEmail:string) 
+  bookSession(singSessionInfo: any, userEmail:string) : Observable<any>
   {
     console.log("INSIDE SERVICE ::  Reserve Session")
     const body = JSON.stringify(singSessionInfo);
@@ -78,7 +78,7 @@ export class ScheduleSessionService {
     return  this.http.post(apiendpoints.RESERVE_SESSION+singSessionInfo.session.id, body, {headers,params}).pipe(catchError(this.handleError));
 
   }
-  cancelSession(singSessionInfo: any, userEmail:string) 
+  cancelSession(singSessionInfo: any, userEmail:string) : Observable<any>
   {
     console.log("INSIDE SERVICE ::  Cancel Reservation")
 
@@ -93,7 +93,7 @@ export class ScheduleSessionService {
     return  this.http.delete(apiendpoints.CANCEL_SESSION + singSessionInfo.id, options ).pipe(catchError(this.handleError));
 
   }
-  genHistoryReports(userEmail:string)
+  genHistoryReports(userEmail:string) : Observable<any>
   {
     console.log("INSIDE SERVICE ::genHistoryReports ")
     const params = new HttpParams().set('email', userEmail);
@@ -110,7 +110,7 @@ export class ScheduleSessionService {
         errorMessage = `Error: ${error.error.message}`;
       } else {
         // Server-side errors
-        errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+        errorMessage = `Error  ${error.error.message}`;
         if(error.status == 404)
         {
           errorMessage = "SERVICE DOWN :: API CONNECTIN FAILED:: 404";
@@ -141,7 +141,7 @@ export class ScheduleSessionService {
           errorMessage = error.error.message;
         }
       }
-      window.alert(errorMessage);
+      // window.alert(errorMessage);
       return throwError(errorMessage);
   }
   
