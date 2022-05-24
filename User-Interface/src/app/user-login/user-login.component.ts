@@ -166,6 +166,11 @@ export class UserLoginComponent implements OnInit {
       singSessionInfo.booked = true;
       this.sessionInfo = data;
 
+      if (this.sessionInfo != undefined) 
+      {
+        this.convertDateTo12hFormat(this.sessionInfo);
+      }
+
       if (tab == 'manage') {
         console.log(" Tab value ====>", tab)
         this.loadUpcomingSessionData();
