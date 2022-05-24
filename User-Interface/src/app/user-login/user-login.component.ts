@@ -117,20 +117,14 @@ export class UserLoginComponent implements OnInit {
 
   convertDateTo12hFormat(allsessionInfo: schedule[]) {
 
-    // allsessionInfo.forEach(singleSessionInfo => {
-    //   const timeString = singleSessionInfo.session.startTime;
-    //   const timeString12hr = new Date('2022-05-20' + timeString + 'Z')
-    //     .toLocaleTimeString('en-US',
-    //       // { timeZone: 'PST', hour12: true, hour: 'numeric', minute: 'numeric' }
-    //       { timeZone: 'PST', hour12: true, hour: 'numeric' }
-    //     );
-    //     singleSessionInfo.session.startTime = timeString12hr.toString(); 
-    // });
-    //  allsessionInfo.forEach(singleSessionInfo => {
-
-    //   if singleSessionInfo.session.dayOfWeek == 'MONDAY'
-    // });
-
+    allsessionInfo.forEach(singleSessionInfo => {
+      const timeString = singleSessionInfo.session.startTime;
+      const timeString12hr = new Date('1984-06-08T' + timeString + 'Z')
+        .toLocaleTimeString('en-US',
+          { timeZone: 'UTC', hour12: true, hour: 'numeric', minute:'numeric' }
+        );
+        singleSessionInfo.session.startTime = timeString12hr;
+    });
   }
 
 
