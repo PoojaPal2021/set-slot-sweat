@@ -11,7 +11,7 @@ import java.util.Locale;
 
 @Entity
 @Proxy(lazy = false)
-public class Session {
+public class Session implements Comparable<Session> {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -91,6 +91,20 @@ public class Session {
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
+
+    @Override
+    public int compareTo(Session otherSession) {
+        DayOfWeek thisDayOfWeek = this.dayOfWeek;
+        DayOfWeek otherDayOfWeek = otherSession.dayOfWeek;
+        int dayOfWeekCompare = thisDayOfWeek.compareTo(otherDayOfWeek);
+
+        if (dayOfWeekCompare != 0) {
+            return dayOfWeekCompare;
+        }
+
+        return this.startTime.compareTo(otherSession.startTime);
+    }
+
 }
 
 

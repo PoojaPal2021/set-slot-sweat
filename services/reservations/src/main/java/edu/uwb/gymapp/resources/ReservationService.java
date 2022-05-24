@@ -57,6 +57,7 @@ public class ReservationService {
             }
         );
 
+        reservations.sort(Comparator.comparing(Reservation::getSession));
         return reservations;
     }
 
