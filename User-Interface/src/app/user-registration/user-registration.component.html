@@ -38,13 +38,13 @@
 
    <ul class="wrapper">
       
-         <label>
-            <input type="radio" value="trainer" formControlName="type">
+         <label style="background-color: whitesmoke">
+            <input type="radio" value="trainer" formControlName="type" [attr.disabled]="true">
             <span><strong>Trainer</strong></span>
          </label> &nbsp; &nbsp; &nbsp;
          
          <label>
-            <input type="radio" value="member" formControlName="type">
+            <input type="radio" value="member" formControlName="type" [(ngModel)]="memberValue">
             <span><strong>Member</strong></span>
             
          </label>

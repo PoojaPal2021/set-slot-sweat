@@ -11,6 +11,7 @@ export class UserRegistrationComponent implements OnInit {
   profileForm!: FormGroup;
   successMessage:any="";
   errorMessage:any="";
+  memberValue = "member";
   
   constructor(private scheduleSessionService: ScheduleSessionService) { }
   ngOnInit() {
