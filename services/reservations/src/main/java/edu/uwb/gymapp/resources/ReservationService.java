@@ -37,26 +37,31 @@ public class ReservationService {
         List<Reservation> reservations = new ArrayList<>();
         Set<Long> idSet = new HashSet<>();
         LocalDateTime currentTime = LocalDateTime.now();
+        DayOfWeek today = currentTime.getDayOfWeek();
+        LocalTime now = LocalTime.now();
         reservationRepository
                 .findByScheduledTimeGreaterThanAndMemberEmailOrderByScheduledTimeAsc(currentTime, memberEmail)
                 .forEach(r -> {
-                    r.setBooked(true);
-                    reservations.add(r);
-                    idSet.add(r.getSession().getId());
+                    if (!r.getSession().getDayOfWeek().equals(today) || !(r.getSession().getStartTime().compareTo(now) <= 0)) {
+                        r.setBooked(true);
+                        reservations.add(r);
+                        idSet.add(r.getSession().getId());
+                    }
                 });
 
         // Add non booked sessions to list with isBooked set to false. We do this so we have one list with all
         // available and booked sessions together.
-        sessionRepository.findAll().forEach(session -> {
-                if (!idSet.contains(session.getId())) {
-                    Reservation reservation = new Reservation();
-                    reservation.setSession(session);
-                    reservation.setBooked(false);
-                    reservations.add(reservation);
-                }
+        for (Session session : sessionRepository.findAll()) {
+            if (!idSet.contains(session.getId()) &&
+                    !(session.getDayOfWeek().equals(today) && session.getStartTime().compareTo(now) <= 0)) {
+                Reservation reservation = new Reservation();
+                reservation.setSession(session);
+                reservation.setBooked(false);
+                reservations.add(reservation);
             }
-        );
+        }
 
+        reservations.sort(Comparator.comparing(Reservation::getSession));
         return reservations;
     }
 
