@@ -56,6 +56,11 @@
   min-width: 90px;
   margin : 14px
 }
+.active
+{
+  background-color:chocolate;
+}
+
 .cancelButton
 {
   background-color: #24574b;
