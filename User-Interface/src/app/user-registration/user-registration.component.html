@@ -2,7 +2,7 @@
 <form id="RegistrationForm" [formGroup]="profileForm" (ngSubmit)="registerNewUser(profileForm)">
    <ul class="wrapper">
       <li class="form-row">
-         <label for="first-name">First Name: </label>
+         <label for="first-name"><strong>First Name:</strong> </label>
          <input id="first-name" type="text" formControlName="firstName">
         
       </li>
@@ -11,14 +11,14 @@
    
    <ul class="wrapper">
       <li class="form-row">
-         <label for="last-name">Last Name: </label>
+         <label for="last-name"><strong>Last Name:</strong> </label>
          <input id="last-name" type="text" formControlName="lastName">
       </li>
    </ul>
 
    <ul class="wrapper">
       <li class="form-row">
-         <label for="user-email">Email: </label>
+         <label for="user-email"><strong>Email:</strong></label>
          <input id="user-email" type="email" formControlName="email">
       </li>
    </ul>
@@ -28,7 +28,7 @@
 
    <ul class="wrapper">
       <li class="form-row">
-         <label for="user-pwd">Passowrd: </label>
+         <label for="user-pwd"><strong>Password:</strong> </label> 
          <input id="user-pwd" type="password" formControlName="password">
       </li>
    </ul>
@@ -40,16 +40,17 @@
       
          <label>
             <input type="radio" value="trainer" formControlName="type">
-            <span>Trainer</span>
+            <span><strong>Trainer</strong></span>
          </label> &nbsp; &nbsp; &nbsp;
          
          <label>
             <input type="radio" value="member" formControlName="type">
-            <span>Member</span>
+            <span><strong>Member</strong></span>
+            
          </label>
       
       </ul>
-<button type="submit" [disabled]="!profileForm.valid"  >Sign-Up</button>  
+<button class="SignUp" type="submit" [disabled]="!profileForm.valid"><strong>Sign Up</strong></button>  
  </form>
 <br/>
 <br/>
@@ -57,4 +58,8 @@
    <a href="https://github.com/PoojaPal2021/set-slot-sweat/wiki" target="_blank" rel="noopener"> Documentation can be found here
    </a>
 </footer>
+
+
+
+
 </div>

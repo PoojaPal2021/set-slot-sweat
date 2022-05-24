@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ScheduleSessionService } from '../services/schedule-session.service';
-
 @Component({
   selector: 'app-user-registration',
   templateUrl: './user-registration.component.html',
@@ -22,7 +21,6 @@ export class UserRegistrationComponent implements OnInit {
         type: new FormControl('')
       });
   }
-
 
   registerNewUser(profileForm: FormGroup) {// TODO: Use EventEmitter with form value
     if (profileForm.invalid) {

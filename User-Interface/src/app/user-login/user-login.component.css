@@ -35,14 +35,14 @@
 {
   max-width: 500px;
   margin: auto;
-  background: white;
+  background: rgb(172, 170, 170);
   padding: 10px;
 }
 .ScheduleTemplate
 {
   max-width: 900px;
   margin: auto;
-  background: white;
+  background: rgba(216, 211, 211, 0.778);
   padding: 10px;
 
 }
@@ -98,6 +98,16 @@
 .chart
 {
   margin: 20px;
+  color:red;
+
+}
+.LoginButton
+{
+  background-color: black;
+  color: white;
+}
+.graphStyle{
+  
 }
 
 

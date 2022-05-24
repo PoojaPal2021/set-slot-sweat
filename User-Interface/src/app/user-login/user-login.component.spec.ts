@@ -75,14 +75,15 @@ describe('UserLoginComponent', () => {
   it('should BOOK session for the User', () => {
     const sessionData = {
     };
-    component.bookSession(sessionData);
+
+    component.bookSession(sessionData, 'manage');
     expect(loginServiceSpy.bookSession).toHaveBeenCalledWith(sessionData);
   });
 
   it('should CANCEL session for the User', () => {
     const sessionData = {
     };
-    component.cancelSession(sessionData);
+    component.cancelSession(sessionData, 'manage');
     expect(loginServiceSpy.cancelSession).toHaveBeenCalledWith(sessionData);
   });
 

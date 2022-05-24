@@ -155,6 +155,8 @@ export class UserLoginComponent implements OnInit {
 
     if (tab == 'upcoming') {
       this.loadManageData();
+    }else if (tab == 'manage'){
+      this.loadUpcomingSessionData();
     }
   }
 

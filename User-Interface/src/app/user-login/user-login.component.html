@@ -5,7 +5,7 @@
  
     <ul class="wrapper">
        <li class="form-row">
-          <label for="user-email">Email: </label>
+          <label for="user-email"><strong>Email:</strong> </label>
           <input id="user-email" type="email" formControlName="email">
          
        </li>
@@ -16,7 +16,7 @@
  
     <ul class="wrapper">
        <li class="form-row">
-          <label for="user-pwd">Passowrd: </label>
+          <label for="user-pwd"><strong>Password:</strong></label>
           <input id="user-pwd" type="password" formControlName="password">
           
        </li>
@@ -26,7 +26,7 @@
     </div>
  
  <div>
-   <button type="submit" [disabled]="!loginForm.valid" >Login</button>  
+   <button type="submit" [disabled]="!loginForm.valid" class="LoginButton"><strong> Login</strong></button>  
  </div>
  
 </form>
@@ -363,7 +363,7 @@
     <mat-tab label="Reports">
       
       <div class="chart" *ngIf="pieChartLabels.length > 0">
-            <canvas baseChart 
+            <canvas class="graphStyle" baseChart 
             [data]="pieChartData"
             [labels]="pieChartLabels"
             [chartType]="pieChartType"

@@ -36,13 +36,21 @@
 {
   max-width: 500px;
   margin: auto;
-  background: white;
+  background: rgb(172, 170, 170);
   padding: 10px;
+  
 }
 .signUpButton
 {
   background-color: #5fafa2 !important;
 }
+.SignUp{
+  background-color: black;
+  color: white;
+}
+
+
+
 
 
 
