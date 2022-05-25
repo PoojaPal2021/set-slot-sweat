@@ -20,6 +20,9 @@ import java.security.Principal;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+/**
+ * Rest controller for Reservation management API
+ */
 @RestController
 @RequestMapping("/reservation-service/api/v1")
 public class ReservationController {

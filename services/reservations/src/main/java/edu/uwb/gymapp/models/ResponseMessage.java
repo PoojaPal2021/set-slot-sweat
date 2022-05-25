@@ -2,6 +2,9 @@ package edu.uwb.gymapp.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * The purpose of this class is to encapsulate a simple string response message
+ */
 public class ResponseMessage {
 
     @JsonProperty

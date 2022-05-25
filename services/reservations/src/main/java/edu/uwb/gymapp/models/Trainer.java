@@ -6,6 +6,9 @@ import org.hibernate.annotations.NaturalId;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+/**
+ * Represents the Trainer table in the database
+ */
 @Entity
 public class Trainer {
     @Id

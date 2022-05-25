@@ -9,6 +9,9 @@ import java.time.LocalTime;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
+/**
+ * Represents the Session table in the database
+ */
 @Entity
 @Proxy(lazy = false)
 public class Session implements Comparable<Session> {

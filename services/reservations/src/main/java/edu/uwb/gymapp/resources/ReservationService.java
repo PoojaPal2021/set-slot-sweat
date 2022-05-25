@@ -17,6 +17,9 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
+/**
+ * Service class for interfacing with the Reservation table in the database
+ */
 @Service
 public class ReservationService {
 
@@ -33,6 +36,11 @@ public class ReservationService {
 
     Logger logger = LoggerFactory.getLogger(ReservationService.class);
 
+    /**
+     * Retrieves all the available and booked reservations for the given member
+     * @param memberEmail   The email of the gym member
+     * @return The list of available and booked reservations
+     */
     public List<Reservation> getAllReservations(String memberEmail) {
         List<Reservation> reservations = new ArrayList<>();
         Set<Long> idSet = new HashSet<>();
@@ -65,6 +73,11 @@ public class ReservationService {
         return reservations;
     }
 
+    /**
+     * Retrieves all the booked reservations for the given member
+     * @param memberEmail   The email of the gym member
+     * @return The list of booked reservations
+     */
     public List<Reservation> getAllBookedReservations(String memberEmail) {
         List<Reservation> reservations = new ArrayList<>();
         LocalDateTime now = LocalDateTime.now();
@@ -129,12 +142,21 @@ public class ReservationService {
         return sessionHistory;
     }
 
+    /**
+     * Retrieves all the current reservations in the database
+     * @return The list of reservations in the database
+     */
     public List<Reservation> getAllReservations() {
         List<Reservation> reservations = new ArrayList<>();
         reservationRepository.findAll().forEach(reservations::add);
         return reservations;
     }
 
+    /**
+     * Adds a new reservation to the database
+     * @param reservation   The reservation to be added to the database
+     * @return  Success or failure message
+     */
     public String addReservation(Reservation reservation) {
         // calculate scheduled date and time from current date and the session start time
         DayOfWeek sessionDay = reservation.getSession().getDayOfWeek();
@@ -175,6 +197,10 @@ public class ReservationService {
         return "SUCCESS";
     }
 
+    /**
+     * Deletes a reservation form the database
+     * @param reservationId The reservation id
+     */
     public void deleteReservation(Long reservationId) {
         reservationRepository.deleteById(reservationId);
     }

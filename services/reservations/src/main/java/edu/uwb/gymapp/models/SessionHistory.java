@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The purpose of this class is to encapsulate the workout history to be sent in a response message
+ */
 public class SessionHistory {
 
     private LocalDate joinDate;
