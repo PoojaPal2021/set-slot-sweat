@@ -1,16 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { UserRegistrationComponent } from './user-registration.component';
 import { ReactiveFormsModule } from '@angular/forms';
-
 import { ScheduleSessionService } from '../services/schedule-session.service'
-
-fdescribe("UserRegistrationComponent", () => {
+/*
+  .spec files are test files
+  contains the unit tests for user registration component 
+*/
+describe("UserRegistrationComponent", () => {
   let component: UserRegistrationComponent;
   let fixture: ComponentFixture<UserRegistrationComponent>;
+  /* mocked dependency injections */
+  let authServiceSpy = jasmine.createSpyObj('ScheduleSessionService', ['registerNewMember', 'registerNewTrainer', 'AClicked']);
 
-  let authServiceSpy = jasmine.createSpyObj('ScheduleSessionService', ['registerNewMember','registerNewTrainer']);
-  
+  /* making the set up to access the component methods */
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [UserRegistrationComponent],
@@ -24,12 +26,14 @@ fdescribe("UserRegistrationComponent", () => {
       .compileComponents();
   });
 
+  /* executed once before each test runs */
   beforeEach(() => {
     fixture = TestBed.createComponent(UserRegistrationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
+  /* Each "it" statemenets define a specific test */
   it('To test if the UserRegistrationComponent Launches', () => {
     expect(component).toBeTruthy();
   });
@@ -40,8 +44,8 @@ fdescribe("UserRegistrationComponent", () => {
       "lastName": "Pal",
       "email": "bobby@bobby.com",
       "password": "poojapal@123",
-      "type":"memebr"
-    
+      "type": "memebr"
+
     });
     expect(component.profileForm.valid).toEqual(true);
   });

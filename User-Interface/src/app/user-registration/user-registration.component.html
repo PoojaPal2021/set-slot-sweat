@@ -1,72 +1,68 @@
-
 <div class="signUpTemplate">
-<form id="RegistrationForm" [formGroup]="profileForm" (ngSubmit)="registerNewUser(profileForm)">
-   <ul class="wrapper">
-      <li class="form-row">
-         <label for="first-name"><strong>First Name:</strong> </label>
-         <input id="first-name" type="text" formControlName="firstName">
-        
-      </li>
-     </ul> 
-     
-   
-   <ul class="wrapper">
-      <li class="form-row">
-         <label for="last-name"><strong>Last Name:</strong> </label>
-         <input id="last-name" type="text" formControlName="lastName">
-      </li>
-   </ul>
+   <form id="RegistrationForm" [formGroup]="profileForm" (ngSubmit)="registerNewUser(profileForm)">
+      <ul class="wrapper">
+         <li class="form-row">
+            <label for="first-name"><strong>First Name:</strong> </label>
+            <input id="first-name" type="text" formControlName="firstName">
 
-   <ul class="wrapper">
-      <li class="form-row">
-         <label for="user-email"><strong>Email:</strong></label>
-         <input id="user-email" type="email" formControlName="email">
-      </li>
-   </ul>
-   <div *ngIf="profileForm.controls['email'].invalid && (profileForm.controls['email'].dirty || profileForm.controls['email'].touched)" style="color:red">
-      Email is required.
-    </div>
+         </li>
+      </ul>
+      <ul class="wrapper">
+         <li class="form-row">
+            <label for="last-name"><strong>Last Name:</strong> </label>
+            <input id="last-name" type="text" formControlName="lastName">
+         </li>
+      </ul>
 
-   <ul class="wrapper">
-      <li class="form-row">
-         <label for="user-pwd"><strong>Password:</strong> </label> 
-         <input id="user-pwd" type="password" formControlName="password">
-      </li>
-   </ul>
-   <div *ngIf="profileForm.controls['password'].invalid && (profileForm.controls['password'].dirty || profileForm.controls['password'].touched)" style="color:red">
-      Password should be minimum of 6 characters.
-    </div>
+      <ul class="wrapper">
+         <li class="form-row">
+            <label for="user-email"><strong>Email:</strong></label>
+            <input id="user-email" type="email" formControlName="email">
+         </li>
+      </ul>
+      <div
+         *ngIf="profileForm.controls['email'].invalid && (profileForm.controls['email'].dirty || profileForm.controls['email'].touched)"
+         style="color:red">
+         Email is required.
+      </div>
 
-   <ul class="wrapper">
-      
+      <ul class="wrapper">
+         <li class="form-row">
+            <label for="user-pwd"><strong>Password:</strong> </label>
+            <input id="user-pwd" type="password" formControlName="password">
+         </li>
+      </ul>
+      <div
+         *ngIf="profileForm.controls['password'].invalid && (profileForm.controls['password'].dirty || profileForm.controls['password'].touched)"
+         style="color:red">
+         Password should be minimum of 6 characters.
+      </div>
+
+      <ul class="wrapper">
          <label style="background-color: whitesmoke">
             <input type="radio" value="trainer" formControlName="type" [attr.disabled]="true">
             <span><strong>Trainer</strong></span>
          </label> &nbsp; &nbsp; &nbsp;
-         
          <label>
             <input type="radio" value="member" formControlName="type" [(ngModel)]="memberValue">
             <span><strong>Member</strong></span>
-            
          </label>
-      
       </ul>
-<button class="SignUp" type="submit" [disabled]="!profileForm.valid"><strong>Sign Up</strong>  </button> 
- </form>
- <div  onclick="this.style.display='none'" *ngIf='successMessage.length > 0' class="Smessage">
-   {{successMessage}}
-    <span  style="float: right; margin-right: 10px;" > <strong>  &times;</strong></span>  
- </div>
- <div  onclick="this.style.display='none'" *ngIf='errorMessage.length > 0' class="Emessage">
-   {{errorMessage}}
-    <span  style="float: right; margin-right: 10px;" > <strong>  &times;</strong></span>  
- </div>
-<br/>
-<br/>
- <footer>
-   <a href="https://github.com/PoojaPal2021/set-slot-sweat/wiki" target="_blank" rel="noopener"> Documentation can be found here
-   </a>
-</footer>
-
-   
+      <button class="SignUp" type="submit" [disabled]="!profileForm.valid"><strong>Sign Up</strong> </button>
+   </form>
+   <div onclick="this.style.display='none'" *ngIf='successMessage.length > 0' class="Smessage">
+      {{successMessage}}
+      <span style="float: right; margin-right: 10px;"> <strong> &times;</strong></span>
+   </div>
+   <div onclick="this.style.display='none'" *ngIf='errorMessage.length > 0' class="Emessage">
+      {{errorMessage}}
+      <span style="float: right; margin-right: 10px;"> <strong> &times;</strong></span>
+   </div>
+   <br />
+   <br />
+   <footer>
+      <a href="https://github.com/PoojaPal2021/set-slot-sweat/wiki" target="_blank" rel="noopener"> Documentation can be
+         found here
+      </a>
+   </footer>
 </div>

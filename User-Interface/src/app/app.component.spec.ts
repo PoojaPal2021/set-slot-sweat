@@ -42,7 +42,6 @@ fdescribe('AppComponent', () => {
   it('To test initial state of the app component', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.status).toBe(false);
     expect(app.initialLoadStatus).toBe(true);
 
     // const fixture = TestBed.createComponent(AppComponent);

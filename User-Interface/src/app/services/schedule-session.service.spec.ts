@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ScheduleSessionService } from './schedule-session.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-fdescribe('ScheduleSessionService', () => {
+describe('ScheduleSessionService', () => {
   let httpTestingController: HttpTestingController;
   let service: ScheduleSessionService;
 

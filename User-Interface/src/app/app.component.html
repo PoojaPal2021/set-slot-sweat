@@ -20,6 +20,7 @@
     color: black;
     font-weight: 600;
   }
+
   .spacer {
     flex: 1;
   }
@@ -44,8 +45,8 @@
     margin: 0;
   }
 
-  
- 
+
+
 
   .toolbar img {
     margin: 0 16px;
@@ -58,7 +59,7 @@
   }
 
   .content {
-    
+
     display: flex;
     margin: 82px auto 32px;
     margin-top: 10%;
@@ -196,7 +197,7 @@
   }
 
   .terminal pre {
-    font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
     color: white;
     padding: 0 1rem 1rem;
     margin: 0;
@@ -240,16 +241,16 @@
     align-items: center;
     font-size: 12px;
     padding: 3px 10px;
-    border: 1px solid rgba(27,31,35,.2);
+    border: 1px solid rgba(27, 31, 35, .2);
     border-radius: 3px;
-    background-image: linear-gradient(-180deg,#fafbfc,#eff3f6 90%);
+    background-image: linear-gradient(-180deg, #fafbfc, #eff3f6 90%);
     margin-left: 4px;
     font-weight: 600;
   }
 
   .github-star-badge:hover {
-    background-image: linear-gradient(-180deg,#f0f3f6,#e6ebf1 90%);
-    border-color: rgba(27,31,35,.35);
+    background-image: linear-gradient(-180deg, #f0f3f6, #e6ebf1 90%);
+    border-color: rgba(27, 31, 35, .35);
     background-position: -.5em;
   }
 
@@ -269,7 +270,8 @@
 
   /* Responsive Styles */
   @media screen and (max-width: 767px) {
-    .card-container > *:not(.circle-link) ,
+
+    .card-container>*:not(.circle-link),
     .terminal {
       width: 100%;
     }
@@ -299,41 +301,42 @@
 
 
 <body class="myDiv">
-  
-<div class="bg"></div>
+
+  <div class="bg"></div>
 
 
-<div class="toolbar" role="banner" >
-  <img width="40" alt="Angular Logo" src="assets/images/gym_logo.png" />
-  <span><strong>Set-Slot-Sweat</strong></span>
-  <div class="spacer"></div>
-</div>
+  <div class="toolbar" role="banner">
+    <img width="40" alt="Angular Logo" src="assets/images/gym_logo.png" />
+    <span><strong>Set-Slot-Sweat</strong></span>
+    <div class="spacer"></div>
+  </div>
 
-<div class="content" role="main"  *ngIf="initialLoadStatus" >
-  <h1 class="animate-charcter">FITNESS to next level</h1>
+  <div class="content" role="main" *ngIf="initialLoadStatus">
+    <h1 class="animate-charcter">FITNESS to next level</h1>
 
-  <div class="card-container" >
-    <div class="card" target="_blank" rel="noopener" routerLink="/register" >
-      <span><strong>New visitor? <span style="color:rgb(41, 143, 152)">Sign-up today.</span></strong></span>
-    </div>
-    <div class="card" target="_blank" rel="noopener" routerLink="/login" >
-      <span><strong>Already a Gym member? <span style="color:rgb(41, 143, 152)"><br/>Login here.</span></strong></span>
+    <div class="card-container">
+      <div class="card" target="_blank" rel="noopener" routerLink="/register">
+        <span><strong>New visitor? <span style="color:rgb(41, 143, 152)">Sign-up today.</span></strong></span>
+      </div>
+      <div class="card" target="_blank" rel="noopener" routerLink="/login">
+        <span><strong>Already a Gym member? <span style="color:rgb(41, 143, 152)"><br />Login
+              here.</span></strong></span>
+      </div>
     </div>
   </div>
-</div>
 
-<div>
-
-
-</div>
+  <div>
 
 
+  </div>
 
-<div >
-  <router-outlet  (activate)="componentAdded($event)">
-  </router-outlet>
-</div>
-  
+
+
+  <div>
+    <router-outlet >
+    </router-outlet>
+  </div>
+
 
   <svg id="clouds" xmlns="http://www.w3.org/2000/svg" width="2611.084" height="485.677" viewBox="0 0 2611.084 485.677">
     <title>Gray Clouds Background</title>

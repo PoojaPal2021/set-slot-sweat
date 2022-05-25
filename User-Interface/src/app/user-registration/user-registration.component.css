@@ -1,20 +1,29 @@
+/*
+  Style for User Registration Component template.
+  . files are class name styles 
+  # are Id based styles 
+*/
 .wrapper {
-    background-color: whitesmoke;
-    list-style-type: none;
-    padding: 0;
-    border-radius: 3px;
-  }
-  .form-row {
-    display: flex;
-    justify-content: flex-end;
-    padding: .5em;
-  }
-  .form-row > label {
-    flex: 1;
-  }
-  .form-row > input {
-    flex: 1;
-  }
+  background-color: whitesmoke;
+  list-style-type: none;
+  padding: 0;
+  border-radius: 3px;
+}
+
+.form-row {
+  display: flex;
+  justify-content: flex-end;
+  padding: .5em;
+}
+
+.form-row>label {
+  flex: 1;
+}
+
+.form-row>input {
+  flex: 1;
+}
+
 /* 
   @media screen and (min-width: 768px) {
     .form-row > input {
@@ -32,19 +41,19 @@
 }
 } */
 
-.signUpTemplate
-{
+.signUpTemplate {
   max-width: 500px;
   margin: auto;
   background: rgb(172, 170, 170);
   padding: 10px;
-  
+
 }
-.signUpButton
-{
+
+.signUpButton {
   background-color: #5fafa2 !important;
 }
-.SignUp{
+
+.SignUp {
   background-color: black;
   color: white;
 }
@@ -53,39 +62,37 @@
 
 
 .alert-danger {
-  background-color: #f44336; /* Red */
+  background-color: #f44336;
+  /* Red */
 }
+
 .alert-success {
-  background-color: #36f456;  
-} 
-.alert{
+  background-color: #36f456;
+}
+
+.alert {
   padding: 20px;
   color: white;
   margin-bottom: 15px;
   text-align: center;
 }
-.Smessage{
-  background-color:rgb(121, 194, 121); 
-  color:balck; 
+
+.Smessage {
+  background-color: rgb(121, 194, 121);
+  color: balck;
   font-weight: bold;
-   margin-left: 20px;margin-top:20px; 
-   height: fit-content;
-   text-align: center;
-}
-.Emessage{
-  background-color:rgb(203, 129, 129) ;
-  color:balck; 
-  font-weight: bold;
-   margin-left: 20px;margin-top:20px; 
-   height: fit-content;
-   text-align: center;
+  margin-left: 20px;
+  margin-top: 20px;
+  height: fit-content;
+  text-align: center;
 }
 
-
-
-
-
-
-
-
-
+.Emessage {
+  background-color: rgb(203, 129, 129);
+  color: balck;
+  font-weight: bold;
+  margin-left: 20px;
+  margin-top: 20px;
+  height: fit-content;
+  text-align: center;
+}

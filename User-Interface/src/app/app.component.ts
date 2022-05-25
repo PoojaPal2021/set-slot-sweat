@@ -5,48 +5,34 @@ import { ScheduleSessionService } from '../app/services/schedule-session.service
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
+/* 
+  Starter component of set-slot-sweat application. 
+*/
 export class AppComponent implements OnInit {
- 
-  // ngOnInit(): void {
-  //   throw new Error('Method not implemented.');
-  // }
-  title = 'set-slot-sweat';
-  status :boolean =false;
-  initialLoadStatus= true;
 
+  title = 'set-slot-sweat'; //application title
+  initialLoadStatus = true; //flag decided whether or not appComponent template is loadede
 
-  routerOutletComponent :any =Object ;
-  routerOutletComponentClassName:  string="";
+  constructor(private scheduleSessionService: ScheduleSessionService) 
+  {
 
-constructor(private scheduleSessionService: ScheduleSessionService)
-{
-
-}
-  ngOnInit() {
-
+  }
+  ngOnInit() 
+  {
     this.scheduleSessionService.aClickedEvent
-    .subscribe((data:string) => {
-      console.log('Event message from Login Component: ================>' + data);
+      .subscribe((data: string) => {
+        console.log('AppComponent :: ngOnInit',  data);
 
-      if (data == "login")
-      {
-        console.log(' INSIDE LOGIN   =======>>>>>>>>' + data);
-        this.initialLoadStatus = false;
-      }
-      else if (data == "logout")
-      {
-        console.log(' INSIDE LOGOUT =====>>>>>>>>' + data);
-        this.initialLoadStatus = true;
-      }
-    });
+        if (data == "login") 
+        {
+          this.initialLoadStatus = false;
+        }
+        else if (data == "logout") 
+        {
+          this.initialLoadStatus = true;
+        }
+      });
   }
 
-  
-  componentAdded(event : any) {
-    
-    
-  }
-  countChangedHandler(event:any) {
-  
-  }
 }

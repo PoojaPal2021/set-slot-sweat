@@ -4,7 +4,7 @@ import { UserLoginComponent } from './user-login.component';
 import { ScheduleSessionService } from '../services/schedule-session.service'
 import { NotFoundError } from 'rxjs';
 
-fdescribe('UserLoginComponent', () => {
+describe('UserLoginComponent', () => {
   let component: UserLoginComponent;
   let fixture: ComponentFixture<UserLoginComponent>;
 
