@@ -114,7 +114,7 @@ public class ReservationController {
         } catch (RuntimeException ex) {
             logger.debug("Failed to book session with id: " + sessionId);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Reservation failed: " + ex.getCause().getCause().getMessage());
+                    "Failed: " + ex.getCause().getCause().getMessage());
         }
 
         if (!status.equals("SUCCESS")) {

@@ -168,7 +168,7 @@ public class ReservationService {
                 .findByScheduledTimeGreaterThanAndSessionId(LocalDateTime.now(), sessionId);
         System.out.println(curBookings);
         if (curBookings.size() >= sessionCapacity) {
-            return "Session is at full capacity";
+            return "We're sorry!! we cannot book your session at this moment as its at full capacity";
         }
 
         reservationRepository.save(reservation);

@@ -1,6 +1,7 @@
 package edu.uwb.gymapp.usermanagement;
 
 import edu.uwb.gymapp.models.Member;
+import edu.uwb.gymapp.models.ResponseMessage;
 import edu.uwb.gymapp.resources.MemberController;
 import edu.uwb.gymapp.resources.MemberService;
 import org.junit.jupiter.api.Assertions;
@@ -47,10 +48,10 @@ class UserManagementTests {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Member> request = new HttpEntity<>(member, headers);
-		ResponseEntity<String> response = this.restTemplate.postForEntity(endpoint, request, String.class);
+		ResponseEntity<ResponseMessage> response = this.restTemplate.postForEntity(endpoint, request, ResponseMessage.class);
 
 		// THEN
-		String responseString = response.getBody();
+		String responseString = response.getBody().getMessage();
 		Assertions.assertEquals("Your profile was successfully created with set-slot-sweat.", responseString);
 
 		// Clean up
@@ -110,10 +111,10 @@ class UserManagementTests {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Member> request = new HttpEntity<>(member, headers);
-		ResponseEntity<String> goodResponse = this.restTemplate.postForEntity(endpoint, request, String.class);
+		ResponseEntity<ResponseMessage> goodResponse = this.restTemplate.postForEntity(endpoint, request, ResponseMessage.class);
 
 		// AND: first succeeds
-		String goodResponseString = goodResponse.getBody();
+		String goodResponseString = goodResponse.getBody().getMessage();
 		Assertions.assertEquals("Your profile was successfully created with set-slot-sweat.", goodResponseString);
 
 		// THEN: Second attempt to signup with same email should fail
