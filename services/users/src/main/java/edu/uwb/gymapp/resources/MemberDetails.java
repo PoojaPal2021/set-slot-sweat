@@ -10,6 +10,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Encapsulates the gym member information as UserDetails for authentication purposes
+ */
 public class MemberDetails implements UserDetails {
 
     private Member member;
