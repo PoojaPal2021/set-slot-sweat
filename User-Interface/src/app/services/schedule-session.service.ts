@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+
 import { Observable, of } from 'rxjs';
 import { schedule } from '../models/schedule';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
@@ -6,12 +6,15 @@ import { throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { apiendpoints } from '../../app/api-endpoints'
-
+import { Injectable, EventEmitter, Output } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
 
 export class ScheduleSessionService {
+  @Output() aClickedEvent = new EventEmitter<string>();
+
+  
   configUrl = 'assets/config.json';
   constructor(private http: HttpClient) { }
 
@@ -62,7 +65,7 @@ export class ScheduleSessionService {
                      password : loginForm.value['password']
                    };
       console.log("Body ==>", body)
-      return  this.http.post(apiendpoints.AUTHENTICATE_AND_LOAD_URL, body,{headers}).pipe(catchError(this.handleError));
+      return  this.http.post(apiendpoints.AUTHENTICATE_AND_LOAD_URL, body,{headers}).pipe(catchError(this.handleErrorLogin));
   }
 
   
@@ -144,6 +147,40 @@ export class ScheduleSessionService {
       // window.alert(errorMessage);
       return throwError(errorMessage);
   }
+
+
+  handleErrorLogin(error: HttpErrorResponse) 
+  {
+      console.log("INSIDE SERVICE ::handleErrorSignUp ")
+      console.log ( ' code ==>', error.status);
+      console.log ( ' response message ==>', error.message);
+      console.log ( ' message ==>', error.error.message);
+      console.log ( ' status text ==>', error.statusText);
+      let errorMessage = 'Unknown error!';
+      if (error.error instanceof ErrorEvent) {
+        // Client-side errors
+        errorMessage = `Error: ${error.error.message}`;
+      } else {
+        // Server-side errors
+        errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+        if(error.status == 404)
+        {
+          errorMessage = "SERVICE DOWN :: API CONNECTIN FAILED:: 404";
+        }else if (error.status == 400)
+        {
+          errorMessage = error.error.message;
+        }
+        errorMessage = error.error.message;
+      }
+      // window.alert(errorMessage);
+      return throwError(errorMessage);
+  }
+
+
+  AClicked(msg: string) {
+    this.aClickedEvent.emit(msg);
+  }
+
   
 }
 

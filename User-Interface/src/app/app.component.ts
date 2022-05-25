@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { ScheduleSessionService } from '../app/services/schedule-session.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -12,16 +12,41 @@ export class AppComponent implements OnInit {
   // }
   title = 'set-slot-sweat';
   status :boolean =false;
-  initialLoadStatus= false;
-  ngOnInit(): void {
-    // this.initialLoadStatus = !this.initialLoadStatus;
+  initialLoadStatus= true;
+
+
+  routerOutletComponent :any =Object ;
+  routerOutletComponentClassName:  string="";
+
+constructor(private scheduleSessionService: ScheduleSessionService)
+{
+
+}
+  ngOnInit() {
+
+    this.scheduleSessionService.aClickedEvent
+    .subscribe((data:string) => {
+      console.log('Event message from Login Component: ================>' + data);
+
+      if (data == "login")
+      {
+        console.log(' INSIDE LOGIN   =======>>>>>>>>' + data);
+        this.initialLoadStatus = false;
+      }
+      else if (data == "logout")
+      {
+        console.log(' INSIDE LOGOUT =====>>>>>>>>' + data);
+        this.initialLoadStatus = true;
+      }
+    });
   }
-  onActivate(event : any) {
+
+  
+  componentAdded(event : any) {
+    
     
   }
   countChangedHandler(event:any) {
   
-    console.log(" event value ", event);
-    this.status = event;
   }
 }

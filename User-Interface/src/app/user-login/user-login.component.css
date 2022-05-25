@@ -42,6 +42,7 @@
 {
   max-width: 900px;
   margin: auto;
+  margin-top: 5%;
   background: rgba(216, 211, 211, 0.778);
   padding: 10px;
 
@@ -78,8 +79,8 @@
 {
   width:250px;
   float: right;
-  margin-right:100px;
-  margin-top:20px;
+  margin-right:2%;
+  margin-top: 2%;
   color:black;
 }
 
