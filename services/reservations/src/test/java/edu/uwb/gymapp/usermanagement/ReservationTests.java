@@ -150,28 +150,13 @@ class ReservationTests {
 
 		ResponseEntity<Reservation[]> bookingResponse = this.restTemplate.postForEntity(bookingEndpoint, null, Reservation[].class);
 
-		// THEN: Both returned lists are equal but session ID 2 is now booked
-		Long newBookedReservationId = -1L;
-		Boolean newSessionIsBooked = false;
-		List<Reservation>	reservationList = Arrays.asList(bookingResponse.getBody());
-		for (Reservation reservation : reservationList) {
-			Long sessionId = reservation.getSession().getId();
-			if (reservation.getId() != null && sessionId == sessionIdToBook) {
-				newBookedReservationId = reservation.getId();
-				newSessionIsBooked = reservation.isBooked();
-				break;
-			}
-		}
-		// Clean up
-		if (newBookedReservationId > -1L) {
-//			System.out.println("Cleaning Up ...");
-//			System.out.println("Deleting reservation with ID: " + newBookedReservationId);
-			reservationRepository.deleteById(newBookedReservationId);
-		}
-
 		// Assertions
 		Assertions.assertEquals(loginResponse.getBody().length, bookingResponse.getBody().length);
-		Assertions.assertTrue(newSessionIsBooked);
+
+		// Clean up
+		Reservation newReservation = reservationRepository.findFirstByOrderByIdDesc();
+		Long newBookedReservationId = newReservation.getId();
+		reservationRepository.deleteById(newBookedReservationId);
 	}
 
 	@Test
@@ -221,23 +206,9 @@ class ReservationTests {
 		Assertions.assertEquals(HttpStatus.CONFLICT, bookingResponse2.getStatusCode());
 
 		// CLEAN UP
-		Long newBookedReservationId = -1L;
-		Boolean newSessionIsBooked = false;
-		List<Reservation>	reservationList = Arrays.asList(bookingResponse.getBody());
-		for (Reservation reservation : reservationList) {
-			Long sessionId = reservation.getSession().getId();
-			if (reservation.getId() != null && sessionId == sessionIdToBook) {
-				newBookedReservationId = reservation.getId();
-				newSessionIsBooked = reservation.isBooked();
-				break;
-			}
-		}
-		// Clean up
-		if (newBookedReservationId > -1L) {
-//			System.out.println("Cleaning Up ...");
-//			System.out.println("Deleting reservation with ID: " + newBookedReservationId);
-			reservationRepository.deleteById(newBookedReservationId);
-		}
+		Reservation newReservation = reservationRepository.findFirstByOrderByIdDesc();
+		Long newBookedReservationId = newReservation.getId();
+		reservationRepository.deleteById(newBookedReservationId);
 	}
 
 	@Test
@@ -266,18 +237,10 @@ class ReservationTests {
 		// WHEN: Books and then cancels a session
 		// Booking:
 		ResponseEntity<Reservation[]> bookingResponse = this.restTemplate.postForEntity(bookingEndpoint, null, Reservation[].class);
-//		System.out.println("Booking response status: " + bookingResponse.getStatusCode());
-		// Cancellation:
-		Long newBookedReservationId = -1L;
-		List<Reservation>	reservationList = Arrays.asList(bookingResponse.getBody());
-		for (Reservation reservation : reservationList) {
-			Long sessionId = reservation.getSession().getId();
-			if (reservation.getId() != null && sessionId == sessionIdToBook) {
-				newBookedReservationId = reservation.getId();
-				break;
-			}
-		}
-//		System.out.println("Cancelling Reservarion with ID: " + newBookedReservationId);
+
+		Reservation newReservation = reservationRepository.findFirstByOrderByIdDesc();
+		Long newBookedReservationId = newReservation.getId();
+		System.out.println("Cancelling Reservarion with ID: " + newBookedReservationId);
 		cancellationEndpoint = cancellationEndpoint + newBookedReservationId + "?email=" + email;
 		ResponseEntity<String> cancellationResponse = this.restTemplate.exchange(cancellationEndpoint, HttpMethod.DELETE, null, String.class);
 //		System.out.println("cancellationResponse: " + cancellationResponse.getBody());
@@ -285,6 +248,7 @@ class ReservationTests {
 		// THEN
 		Assertions.assertEquals(HttpStatus.OK, loginResponse.getStatusCode());
 		Assertions.assertEquals(HttpStatus.OK, bookingResponse.getStatusCode());
+		System.out.print(cancellationResponse);
 		Assertions.assertEquals(HttpStatus.OK, cancellationResponse.getStatusCode());
 
 		List<Reservation> endReservationList = reservationRepository.findByMemberEmail(email);

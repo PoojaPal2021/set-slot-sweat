@@ -1,7 +1,10 @@
 package edu.uwb.gymapp.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ResponseMessage {
 
+    @JsonProperty
     private String message;
 
     public ResponseMessage() {

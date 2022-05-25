@@ -22,4 +22,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     public List<Reservation> findByScheduledTimeBeforeAndAndMemberEmail(LocalDateTime scheduledTime, String email);
 
+    public Reservation findFirstByOrderByIdDesc();
+
 }
