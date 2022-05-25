@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { ScheduleSessionService } from './schedule-session.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-describe('ScheduleSessionService', () => {
+fdescribe('ScheduleSessionService', () => {
   let httpTestingController: HttpTestingController;
   let service: ScheduleSessionService;
 
@@ -18,6 +18,12 @@ describe('ScheduleSessionService', () => {
 
   it('checks if the user defined service is UP', () => {
     expect(service).toBeTruthy();
+  });
+  it('checks if emitter steup is ready', () => {
+    expect(service.aClickedEvent).toBeDefined();
+  });
+  it('checks if necessary functions are defined and used', () => {
+    expect(service.bookSession).toBeDefined();
   });
 
   //need to integrate with the backend services
