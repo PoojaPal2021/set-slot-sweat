@@ -7,7 +7,8 @@ import { getLocaleCurrencyName, getLocaleDateFormat, getLocaleDayNames, getLocal
 import { graphData } from '../models/analytics';
 import { ChartType, ChartOptions } from 'chart.js';
 import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
-import {MatDialog} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
+import { ThisReceiver } from '@angular/compiler';
 @Component({
   selector: 'app-user-login',
   templateUrl: './user-login.component.html',
@@ -17,8 +18,8 @@ export class UserLoginComponent implements OnInit {
   @Output() loginStatus: EventEmitter<boolean> = new EventEmitter();
   sessionInfo: schedule[] | undefined;
   upcomingSessionInfo: schedule[] | undefined;
-  successMessage:any="";
-  loginErrorMessage:any="";
+  successMessage: any = "";
+  loginErrorMessage: any = "";
   // bookingErrorMessage:any="";
 
   authenticatedUser = false;
@@ -29,6 +30,9 @@ export class UserLoginComponent implements OnInit {
 
   allSessionInfo: any;
   singSessionInfo: any;
+
+  isPresentUpSesh: boolean = false;
+  infoMessage: string = " There are no Upcoming Session scheduled";
 
   /*arra holding 7 days from now */
   weekDaysFrmTdy: any = new Array(7);
@@ -52,7 +56,7 @@ export class UserLoginComponent implements OnInit {
 
   public chartColors: Array<any> = [
     { // all colors in order
-      backgroundColor: ['#9dc5a8', '#5d946c', '#89ab80c3', '#8d944fc3', '#536157','#649472', '#7c9583' ]
+      backgroundColor: ['#9dc5a8', '#5d946c', '#89ab80c3', '#8d944fc3', '#536157', '#649472', '#7c9583']
     }
   ]
 
@@ -76,66 +80,70 @@ export class UserLoginComponent implements OnInit {
 
   loadProfile(loginForm: FormGroup) {
 
+
     console.log("Login Form .. cannot stringify  -->", loginForm);
     this.userEmail = loginForm.value['email'];
     this.loadManageData();
-    
+
     console.log("LOAD")
     console.log(" Before calling the loadupcoming", this.showloginTemp)
-
-        
-      
-    
-
+  }
+  logOutEventEvent() {
+    this.scheduleSessionService.AClicked("logout");
   }
 
-  loadManageData(){
-    this.loginErrorMessage ="";
+  loadManageData() {
+    this.historyDataReset();
+            
+    this.loginErrorMessage = "";
 
-    console.log(" Cred ==>", this.loginForm.value['email'],   "", this.loginForm.value['password'])
+    console.log(" Cred ==>", this.loginForm.value['email'], "", this.loginForm.value['password'])
     this.scheduleSessionService.authenticateAndloadProfileData(this.loginForm)
-    .subscribe(
-      (data: any) => 
-        {
+      .subscribe(
+        (data: any) => {
           console.log("DATA")
-            this.hideLoginForm = true;
-            this.showloginTemp = true;
-           
-            console.log(" making true in data")
-            this.loginStatus.emit(this.hideLoginForm);
-            this.sessionInfo = data;
-            console.log("LOADED DATA =>", this.sessionInfo);
-            if (this.sessionInfo != undefined) 
-            {
-              this.getWeekdays();
-              this.convertDateTo12hFormat(this.sessionInfo);
-              this.genHistoryReports()
-            }
-            this.loadUpcomingSessionData();
+          this.hideLoginForm = true;
+          this.showloginTemp = true;
+
+          console.log(" making true in data")
+          this.loginStatus.emit(this.hideLoginForm);
+          this.sessionInfo = data;
+          console.log("LOADED DATA =>", this.sessionInfo);
+          if (this.sessionInfo != undefined) {
+            this.getWeekdays();
+            this.convertDateTo12hFormat(this.sessionInfo);
+            this.genHistoryReports()
+          }
+          this.loadUpcomingSessionData();
+          this.scheduleSessionService.AClicked("login");
         },
-      (error : any) =>
-        {
+        (error: any) => {
           console.log("ERROR")
-            console.log(" making false in error")
-            this.showloginTemp = false;
-            this.loginErrorMessage = error;
-            console.log (" Login error message ===>", this.loginErrorMessage)
+          console.log(" making false in error")
+          this.showloginTemp = false;
+          this.loginErrorMessage = error;
+          console.log(" Login error message ===>", this.loginErrorMessage)
         }
-    )
+      )
   }
 
-  loadUpcomingSessionData()
-  {
+  loadUpcomingSessionData() {
     console.log(" Inside upcoming component");
-    this.loginErrorMessage ="";
+    this.loginErrorMessage = "";
     this.scheduleSessionService.authenticateAndloadUpcomingSessions(this.userEmail).subscribe((data: any) => {
 
       this.hideLoginForm = true;
       this.showloginTemp = true;
 
       this.upcomingSessionInfo = data;
+
       if (this.upcomingSessionInfo != undefined) {
         this.convertDateTo12hFormat(this.upcomingSessionInfo);
+
+        if (this.upcomingSessionInfo?.length > 0) 
+        {
+          this.isPresentUpSesh = true;
+        }
       }
       console.log("LOADED UPCOMING SESSION DATA =>", this.upcomingSessionInfo);
     });
@@ -147,9 +155,9 @@ export class UserLoginComponent implements OnInit {
       const timeString = singleSessionInfo.session.startTime;
       const timeString12hr = new Date('1984-06-08T' + timeString + 'Z')
         .toLocaleTimeString('en-US',
-          { timeZone: 'UTC', hour12: true, hour: 'numeric', minute:'numeric' }
+          { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }
         );
-        singleSessionInfo.session.startTime = timeString12hr;
+      singleSessionInfo.session.startTime = timeString12hr;
     });
   }
 
@@ -161,26 +169,26 @@ export class UserLoginComponent implements OnInit {
     console.log(" User logged in ===>", this.userEmail)
 
     this.scheduleSessionService.bookSession(singSessionInfo, this.userEmail)
-    .subscribe((data: any) => {
-      console.log("RESPONSE FROM BACKEND ON booking", data);
-      singSessionInfo.booked = true;
-      this.sessionInfo = data;
+      .subscribe((data: any) => {
+        console.log("RESPONSE FROM BACKEND ON booking", data);
+        singSessionInfo.booked = true;
+        this.sessionInfo = data;
 
-      if (this.sessionInfo != undefined) 
-      {
-        this.convertDateTo12hFormat(this.sessionInfo);
-      }
+        if (this.sessionInfo != undefined) {
+          this.convertDateTo12hFormat(this.sessionInfo);
+        }
 
-      if (tab == 'manage') {
-        console.log(" Tab value ====>", tab)
-        this.loadUpcomingSessionData();
-      }
-    },
-    (error : any )=>{
-    }
-    );
+        if (tab == 'manage') 
+        {
+          console.log(" Tab value ====>", tab)
+          this.loadUpcomingSessionData();
+        }
+      },
+        (error: any) => {
+        }
+      );
 
-    
+
   }
   // openDialog() {
   //   this.dialog.open(DialogElementsExampleDialog);
@@ -194,13 +202,13 @@ export class UserLoginComponent implements OnInit {
 
       if (tab == 'upcoming') {
         this.loadManageData();
-      }else if (tab == 'manage'){
+      } else if (tab == 'manage') {
         this.loadUpcomingSessionData();
       }
 
     });
 
-   
+
   }
 
   updateUserDetails() {
@@ -249,5 +257,15 @@ export class UserLoginComponent implements OnInit {
       this.weekDaysFrmTdy[day] = (dayNames[(todayNum + day) % 7]);
     }
   }
+
+  historyDataReset()
+  {
+    this.pieChartLabels =[];
+    this.pieChartData =[];
+
+  }
 }
+
+
+
 

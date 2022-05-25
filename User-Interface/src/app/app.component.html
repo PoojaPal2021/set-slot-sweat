@@ -61,6 +61,7 @@
     
     display: flex;
     margin: 82px auto 32px;
+    margin-top: 10%;
     padding: 0 16px;
     max-width: 960px;
     flex-direction: column;
@@ -308,10 +309,7 @@
   <div class="spacer"></div>
 </div>
 
-<div class="content" role="main"   >
-  <!-- *ngIf=" initialLoadStatus" -->
-  
-  
+<div class="content" role="main"  *ngIf="initialLoadStatus" >
   <h1 class="animate-charcter">FITNESS to next level</h1>
 
   <div class="card-container" >
@@ -323,8 +321,16 @@
     </div>
   </div>
 </div>
+
+<div>
+
+
+</div>
+
+
+
 <div >
-  <router-outlet  >
+  <router-outlet  (activate)="componentAdded($event)">
   </router-outlet>
 </div>
   

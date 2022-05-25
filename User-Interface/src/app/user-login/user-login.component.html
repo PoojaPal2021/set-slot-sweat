@@ -50,7 +50,7 @@
           <mat-icon>reorder</mat-icon>
           <span>Account Details</span>
         </button>
-        <button mat-menu-item routerLink="/logout"  class="userMenuItem">
+        <button  (click)="logOutEventEvent()"   mat-menu-item routerLink="/"  class="userMenuItem">
           <mat-icon>exit_to_app</mat-icon>
           <span>Log out</span>
         </button>
@@ -60,8 +60,13 @@
 
 <div class="ScheduleTemplate" *ngIf="showloginTemp" >
   <mat-tab-group >
-    <mat-tab label="Upcoming Sessions" >
-      <div *ngFor="let eachUpcomingSession of upcomingSessionInfo; ">
+    <mat-tab label="Upcoming Sessions"  >
+      <a *ngIf="!isPresentUpSesh">
+          <div style="margin: 20px;">
+            {{infoMessage}}
+          </div>    
+      </a>
+      <div *ngFor="let eachUpcomingSession of upcomingSessionInfo; " >
         <mat-card class="example-card" *ngIf="eachUpcomingSession.booked">
           <mat-card-title-group>
           <img mat-card-md-image src="../../assets/images/gym_logo.png" >
