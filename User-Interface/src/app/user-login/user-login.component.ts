@@ -70,7 +70,7 @@ export class UserLoginComponent implements OnInit {
     }
   );
 
-  constructor(private scheduleSessionService: ScheduleSessionService, public dialog: MatDialog) {
+  constructor(private scheduleSessionService: ScheduleSessionService) {
     monkeyPatchChartJsTooltip();
     monkeyPatchChartJsLegend();
   }
