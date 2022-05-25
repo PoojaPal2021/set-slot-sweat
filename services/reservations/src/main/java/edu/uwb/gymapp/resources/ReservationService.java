@@ -1,32 +1,25 @@
 package edu.uwb.gymapp.resources;
 
-import edu.uwb.gymapp.models.Reservation;
-import edu.uwb.gymapp.models.ReservationRepository;
-import edu.uwb.gymapp.models.Session;
-import edu.uwb.gymapp.models.SessionRepository;
-import edu.uwb.gymapp.workoutsession.SessionService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.support.Repositories;
-import org.springframework.http.*;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import edu.uwb.gymapp.models.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
+/**
+ * Service class for interfacing with the Reservation table in the database
+ */
 @Service
 public class ReservationService {
 
@@ -34,44 +27,136 @@ public class ReservationService {
     private ReservationRepository reservationRepository;
 
     @Autowired
-    private WebApplicationContext appContext;
+    private SessionRepository sessionRepository;
 
     @Autowired
     private RestTemplate restTemplate;
 
+    private static final String GET_MEMBER_ENDPOINT = "http://localhost:18001/user-management/api/v1/members?email=";
+
+    Logger logger = LoggerFactory.getLogger(ReservationService.class);
+
+    /**
+     * Retrieves all the available and booked reservations for the given member
+     * @param memberEmail   The email of the gym member
+     * @return The list of available and booked reservations
+     */
     public List<Reservation> getAllReservations(String memberEmail) {
         List<Reservation> reservations = new ArrayList<>();
         Set<Long> idSet = new HashSet<>();
         LocalDateTime currentTime = LocalDateTime.now();
+        DayOfWeek today = currentTime.getDayOfWeek();
+        LocalTime now = LocalTime.now();
         reservationRepository
-                .findByScheduledTimeGreaterThanAndMemberEmail(currentTime, memberEmail)
-                .forEach(r -> {r.setBooked(true); reservations.add(r); idSet.add(r.getSession().getId());});
+                .findByScheduledTimeGreaterThanAndMemberEmailOrderByScheduledTimeAsc(currentTime, memberEmail)
+                .forEach(r -> {
+                    if (!r.getSession().getDayOfWeek().equals(today) || !(r.getSession().getStartTime().compareTo(now) <= 0)) {
+                        r.setBooked(true);
+                        reservations.add(r);
+                        idSet.add(r.getSession().getId());
+                    }
+                });
 
         // Add non booked sessions to list with isBooked set to false. We do this so we have one list with all
         // available and booked sessions together.
-        // Todo: Split the sessions logic into a separate microservice. Then, we will call it using a RestTemplate.
-        Repositories repositories = new Repositories(appContext);
-        List<Session> sessions = new ArrayList<>();
-        JpaRepository<Session, Long> sessionRepository = (JpaRepository) repositories.getRepositoryFor(Session.class).get();
-        sessionRepository.findAll().forEach(session -> {
-                if (!idSet.contains(session.getId())) {
-                    Reservation reservation = new Reservation();
-                    reservation.setSession(session);
-                    reservation.setBooked(false);
-                    reservations.add(reservation);
-                }
+        for (Session session : sessionRepository.findAll()) {
+            if (!idSet.contains(session.getId()) &&
+                    !(session.getDayOfWeek().equals(today) && session.getStartTime().compareTo(now) <= 0)) {
+                Reservation reservation = new Reservation();
+                reservation.setSession(session);
+                reservation.setBooked(false);
+                reservations.add(reservation);
             }
-        );
+        }
+
+        reservations.sort(Comparator.comparing(Reservation::getSession));
+        return reservations;
+    }
+
+    /**
+     * Retrieves all the booked reservations for the given member
+     * @param memberEmail   The email of the gym member
+     * @return The list of booked reservations
+     */
+    public List<Reservation> getAllBookedReservations(String memberEmail) {
+        List<Reservation> reservations = new ArrayList<>();
+        LocalDateTime now = LocalDateTime.now();
+        reservationRepository
+                .findByScheduledTimeGreaterThanAndMemberEmailOrderByScheduledTimeAsc(now, memberEmail)
+                .forEach(reservation -> {
+                    reservation.setBooked(true);
+                    reservations.add(reservation);
+                });
 
         return reservations;
     }
 
+    /**
+     * Retrieve a summary of the reservation history of the given member, since they joined the gym
+     * @param memberEmail   email The email of the gym member
+     * @return  The history of the member's reservations since they joined the gym
+     */
+    public SessionHistory getHistory(String memberEmail) {
+        Member member = restTemplate.getForObject(GET_MEMBER_ENDPOINT + memberEmail, Member.class);
+        if (member == null) {
+            logger.debug("User not found: " + memberEmail);
+            throw new UsernameNotFoundException("User not found: " + memberEmail);
+        }
+
+        // Calculate the total number of available sessions per workout type
+        LocalDateTime joinDate = member.getJoinDate();
+        LocalDateTime now = LocalDateTime.now();
+        long totalWeeks = ChronoUnit.WEEKS.between(joinDate, now);
+        Map<String, Integer> workoutMap = new HashMap<>();
+        List<Session> sessions = new ArrayList<>();
+        sessionRepository.findAll().forEach(session -> {
+            Integer curInt = workoutMap.getOrDefault(session.getWorkout().getName(), 0);
+            workoutMap.put(session.getWorkout().getName(), curInt + 1);
+            sessions.add(session);
+        });
+
+        // Get the total number of sessions attended until now. Add them to the history
+        SessionHistory sessionHistory = new SessionHistory();
+        sessionHistory.setJoinDate(joinDate.toLocalDate());
+        sessionHistory.setWeeksSinceJoined(totalWeeks);
+        Map<String, Integer> attendedWorkouts = new HashMap<>();
+        reservationRepository
+                .findByScheduledTimeBeforeAndAndMemberEmail(now, memberEmail)
+                .forEach(reservation -> {
+                    Integer curInt = attendedWorkouts.getOrDefault(reservation.getSession().getWorkout().getName(), 0);
+                    attendedWorkouts.put(reservation.getSession().getWorkout().getName(), curInt + 1);
+                    sessionHistory.setTotalAttended(sessionHistory.getTotalAttended() + 1);
+                });
+
+
+        // Calculate total number of session available
+        sessionHistory.setTotalSessions(sessions.size() * totalWeeks);
+        for (String name : workoutMap.keySet()) {
+            WorkoutHistory workoutHistory = new WorkoutHistory();
+            workoutHistory.setName(name);
+            workoutHistory.setTotal(workoutMap.get(name) * totalWeeks);
+            workoutHistory.setAttended(attendedWorkouts.getOrDefault(name, 0));
+            sessionHistory.addWorkoutHistory(workoutHistory);
+        }
+
+        return sessionHistory;
+    }
+
+    /**
+     * Retrieves all the current reservations in the database
+     * @return The list of reservations in the database
+     */
     public List<Reservation> getAllReservations() {
         List<Reservation> reservations = new ArrayList<>();
         reservationRepository.findAll().forEach(reservations::add);
         return reservations;
     }
 
+    /**
+     * Adds a new reservation to the database
+     * @param reservation   The reservation to be added to the database
+     * @return  Success or failure message
+     */
     public String addReservation(Reservation reservation) {
         // calculate scheduled date and time from current date and the session start time
         DayOfWeek sessionDay = reservation.getSession().getDayOfWeek();
@@ -102,15 +187,20 @@ public class ReservationService {
         Long sessionId = reservation.getSession().getId();
         Integer sessionCapacity = reservation.getSession().getCapacity();
         List<Reservation> curBookings = reservationRepository
-                .findByScheduledTimeGreaterThanAndSessionId(scheduledTime, sessionId);
+                .findByScheduledTimeGreaterThanAndSessionId(LocalDateTime.now(), sessionId);
+        System.out.println(curBookings);
         if (curBookings.size() >= sessionCapacity) {
-            return "Session is at full capacity";
+            return "We're sorry!! we cannot book your session at this moment as its at full capacity";
         }
 
         reservationRepository.save(reservation);
         return "SUCCESS";
     }
 
+    /**
+     * Deletes a reservation form the database
+     * @param reservationId The reservation id
+     */
     public void deleteReservation(Long reservationId) {
         reservationRepository.deleteById(reservationId);
     }

@@ -6,10 +6,15 @@ import javax.persistence.*;
 import java.sql.Time;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.time.format.TextStyle;
+import java.util.Locale;
 
+/**
+ * Represents the Session table in the database
+ */
 @Entity
 @Proxy(lazy = false)
-public class Session {
+public class Session implements Comparable<Session> {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -27,6 +32,9 @@ public class Session {
     @Enumerated(EnumType.STRING)
     @Column(name = "week_day")
     private DayOfWeek dayOfWeek;
+
+//    @Transient
+//    private String dayAbbreviation;
 
     private Integer capacity;
 
@@ -68,7 +76,16 @@ public class Session {
 
     public void setDayOfWeek(DayOfWeek dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
+//        this.setDayAbbreviation(dayOfWeek);
     }
+
+//    public void setDayAbbreviation(DayOfWeek dayOfWeek) {
+//        this.dayAbbreviation = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US);
+//    }
+//
+//    public String getDayAbbreviation() {
+//        return this.dayAbbreviation;
+//    }
 
     public Integer getCapacity() {
         return capacity;
@@ -77,6 +94,20 @@ public class Session {
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
+
+    @Override
+    public int compareTo(Session otherSession) {
+        DayOfWeek thisDayOfWeek = this.dayOfWeek;
+        DayOfWeek otherDayOfWeek = otherSession.dayOfWeek;
+        int dayOfWeekCompare = thisDayOfWeek.compareTo(otherDayOfWeek);
+
+        if (dayOfWeekCompare != 0) {
+            return dayOfWeekCompare;
+        }
+
+        return this.startTime.compareTo(otherSession.startTime);
+    }
+
 }
 
 

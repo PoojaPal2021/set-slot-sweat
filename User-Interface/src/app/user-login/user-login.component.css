@@ -18,9 +18,8 @@
 
 
   .example-card {
-    
-    max-width: 400px;
-    margin-bottom: 8px;
+    max-width: 800px;
+    margin-bottom: 20px;
   }
 
   .scheduleBody{
@@ -31,5 +30,98 @@
     background-color: aquamarine;
   }
 
+
+.loginTemplate
+{
+  max-width: 500px;
+  margin: auto;
+  background: rgb(172, 170, 170);
+  padding: 10px;
+}
+.ScheduleTemplate
+{
+  max-width: 900px;
+  margin: auto;
+  margin-top: 5%;
+  background: rgba(216, 211, 211, 0.778);
+  padding: 10px;
+
+}
+.terminal{
+  margin: 20px;
+}
+.mat-fab
+{
+  background-color: #3abfa0;
+  color: black;
+  min-width: 90px;
+  margin : 14px
+}
+.active
+{
+  background-color:#286b5c ;
+}
+
+.cancelButton
+{
+  background-color: #24574b;
+  color: white;
+  
+}
+.bookButton
+{
+  background-color: #3abfa0;
+  color: black;
+  
+}
+
+.userIcon
+{
+  width:250px;
+  float: right;
+  margin-right:2%;
+  margin-top: 2%;
+  color:black;
+}
+
+.mat-tab-group {
+  margin-bottom: 100px;
+  margin-left: 15px;
+}
+.userMenuItem{
+  background-color: #5fafa2 !important;
+  margin-top: 2px;
+}
+.logInButton
+{
+  background-color: #5fafa2 !important;;
+}
+.historyInfo{
+ background-color: #5fafa2;
+ max-width: 400px;
+ float:right
+}
+.chart
+{
+  margin: 20px;
+  color:red;
+
+}
+.LoginButton
+{
+  background-color: black;
+  color: white;
+}
+.graphStyle{
+  
+}
+.Emessage{
+  background-color:rgb(203, 129, 129) ;
+  color:balck; 
+  font-weight: bold;
+   margin-left: 20px;margin-top:20px; 
+   height: fit-content;
+   text-align: center;
+}
 
 

@@ -52,7 +52,7 @@ class ReservationTests {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		Map<String, String> authMap = new HashMap<>();
-		authMap.put("username", "jardiamj@gymapp.com");
+		authMap.put("username", "unittest@setslotsweat.com");
 		authMap.put("password", "Password");
 
 		// WHEN: a member attempts to login
@@ -71,7 +71,7 @@ class ReservationTests {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		Map<String, String> authMap = new HashMap<>();
-		authMap.put("username", "jardiamj@gymapp.com");
+		authMap.put("username", "unittest@setslotsweat.com");
 		authMap.put("password", "XXX");
 
 		// WHEN: a member attempts to login
@@ -94,7 +94,7 @@ class ReservationTests {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		Map<String, String> authMap = new HashMap<>();
-		authMap.put("username", "jardiamj@gymapp.com");
+		authMap.put("username", "unittest@setslotsweat.com");
 
 		// When: a member attempts to login
 		HttpEntity<Map<String, String>> request = new HttpEntity<>(authMap, headers);
@@ -115,7 +115,7 @@ class ReservationTests {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		Map<String, String> authMap = new HashMap<>();
-		authMap.put("username", "jardiamj@gymapp.com");
+		authMap.put("username", "unittest@setslotsweat.com");
 		authMap.put("password", "Password");
 
 		// When: a member attempts to login
@@ -132,7 +132,7 @@ class ReservationTests {
 	@Test
 	public void bookingSessionShouldSucceed() {
 		// TODO: setup a member that is only used for testing
-		String email = "jardiamj@gymapp.com";
+		String email = "unittest@setslotsweat.com";
 		Long sessionIdToBook = 5L;
 		String bookingEndpoint = "http://localhost:" + port +
 				                 "/reservation-service/api/v1/session/book/" + sessionIdToBook +
@@ -143,40 +143,25 @@ class ReservationTests {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		Map<String, String> authMap = new HashMap<>();
-		authMap.put("username", "jardiamj@gymapp.com");
+		authMap.put("username", email);
 		authMap.put("password", "Password");
 		HttpEntity<Map<String, String>> request = new HttpEntity<>(authMap, headers);
 		ResponseEntity<Reservation[]> loginResponse = this.restTemplate.postForEntity(loginEndpoint, request, Reservation[].class);
 
 		ResponseEntity<Reservation[]> bookingResponse = this.restTemplate.postForEntity(bookingEndpoint, null, Reservation[].class);
 
-		// THEN: Both returned lists are equal but session ID 2 is now booked
-		Long newBookedReservationId = -1L;
-		Boolean newSessionIsBooked = false;
-		List<Reservation>	reservationList = Arrays.asList(bookingResponse.getBody());
-		for (Reservation reservation : reservationList) {
-			Long sessionId = reservation.getSession().getId();
-			if (reservation.getId() != null && sessionId == sessionIdToBook) {
-				newBookedReservationId = reservation.getId();
-				newSessionIsBooked = reservation.isBooked();
-				break;
-			}
-		}
-		// Clean up
-		if (newBookedReservationId > -1L) {
-//			System.out.println("Cleaning Up ...");
-//			System.out.println("Deleting reservation with ID: " + newBookedReservationId);
-			reservationRepository.deleteById(newBookedReservationId);
-		}
-
 		// Assertions
 		Assertions.assertEquals(loginResponse.getBody().length, bookingResponse.getBody().length);
-		Assertions.assertTrue(newSessionIsBooked);
+
+		// Clean up
+		Reservation newReservation = reservationRepository.findFirstByOrderByIdDesc();
+		Long newBookedReservationId = newReservation.getId();
+		reservationRepository.deleteById(newBookedReservationId);
 	}
 
 	@Test
 	public void bookingSessionAfterLoginOutShouldFail() {
-		String email = "jardiamj@gymapp.com";
+		String email = "unittest@setslotsweat.com";
 		String logoutEndPoint = "http://localhost:" + port + "/reservation-service/api/v1/member/logout";
 		Long sessionIdToBook = 5L;
 		String bookingEndpoint = "http://localhost:" + port +
@@ -195,7 +180,7 @@ class ReservationTests {
 
 	@Test
 	public void bookingSameSessionTwiceShouldFail() {
-		String email = "jardiamj@gymapp.com";
+		String email = "unittest@setslotsweat.com";
 		Long sessionIdToBook = 5L;
 		String bookingEndpoint = "http://localhost:" + port +
 				"/reservation-service/api/v1/session/book/" + sessionIdToBook +
@@ -206,7 +191,7 @@ class ReservationTests {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		Map<String, String> authMap = new HashMap<>();
-		authMap.put("username", "jardiamj@gymapp.com");
+		authMap.put("username", email);
 		authMap.put("password", "Password");
 		HttpEntity<Map<String, String>> request = new HttpEntity<>(authMap, headers);
 		ResponseEntity<Reservation[]> loginResponse = this.restTemplate.postForEntity(loginEndpoint, request, Reservation[].class);
@@ -221,28 +206,14 @@ class ReservationTests {
 		Assertions.assertEquals(HttpStatus.CONFLICT, bookingResponse2.getStatusCode());
 
 		// CLEAN UP
-		Long newBookedReservationId = -1L;
-		Boolean newSessionIsBooked = false;
-		List<Reservation>	reservationList = Arrays.asList(bookingResponse.getBody());
-		for (Reservation reservation : reservationList) {
-			Long sessionId = reservation.getSession().getId();
-			if (reservation.getId() != null && sessionId == sessionIdToBook) {
-				newBookedReservationId = reservation.getId();
-				newSessionIsBooked = reservation.isBooked();
-				break;
-			}
-		}
-		// Clean up
-		if (newBookedReservationId > -1L) {
-//			System.out.println("Cleaning Up ...");
-//			System.out.println("Deleting reservation with ID: " + newBookedReservationId);
-			reservationRepository.deleteById(newBookedReservationId);
-		}
+		Reservation newReservation = reservationRepository.findFirstByOrderByIdDesc();
+		Long newBookedReservationId = newReservation.getId();
+		reservationRepository.deleteById(newBookedReservationId);
 	}
 
 	@Test
 	public void cancelingRecentlyBookedReservationShouldSucceed() {
-		String email = "jardiamj@gymapp.com";
+		String email = "unittest@setslotsweat.com";
 		String cancellationEndpoint= "http://localhost:" + port +
 				  				      "/reservation-service/api/v1/session/cancel/";
 		Long sessionIdToBook = 5L;
@@ -266,18 +237,10 @@ class ReservationTests {
 		// WHEN: Books and then cancels a session
 		// Booking:
 		ResponseEntity<Reservation[]> bookingResponse = this.restTemplate.postForEntity(bookingEndpoint, null, Reservation[].class);
-//		System.out.println("Booking response status: " + bookingResponse.getStatusCode());
-		// Cancellation:
-		Long newBookedReservationId = -1L;
-		List<Reservation>	reservationList = Arrays.asList(bookingResponse.getBody());
-		for (Reservation reservation : reservationList) {
-			Long sessionId = reservation.getSession().getId();
-			if (reservation.getId() != null && sessionId == sessionIdToBook) {
-				newBookedReservationId = reservation.getId();
-				break;
-			}
-		}
-//		System.out.println("Cancelling Reservarion with ID: " + newBookedReservationId);
+
+		Reservation newReservation = reservationRepository.findFirstByOrderByIdDesc();
+		Long newBookedReservationId = newReservation.getId();
+		System.out.println("Cancelling Reservarion with ID: " + newBookedReservationId);
 		cancellationEndpoint = cancellationEndpoint + newBookedReservationId + "?email=" + email;
 		ResponseEntity<String> cancellationResponse = this.restTemplate.exchange(cancellationEndpoint, HttpMethod.DELETE, null, String.class);
 //		System.out.println("cancellationResponse: " + cancellationResponse.getBody());
@@ -285,6 +248,7 @@ class ReservationTests {
 		// THEN
 		Assertions.assertEquals(HttpStatus.OK, loginResponse.getStatusCode());
 		Assertions.assertEquals(HttpStatus.OK, bookingResponse.getStatusCode());
+		System.out.print(cancellationResponse);
 		Assertions.assertEquals(HttpStatus.OK, cancellationResponse.getStatusCode());
 
 		List<Reservation> endReservationList = reservationRepository.findByMemberEmail(email);
@@ -293,7 +257,7 @@ class ReservationTests {
 
 	@Test
 	public void cancelingUnbookedReservationShouldFail() {
-		String email = "jardiamj@gymapp.com";
+		String email = "unittest@setslotsweat.com";
 		String cancellationEndpoint= "http://localhost:" + port +
 				"/reservation-service/api/v1/session/cancel/";
 		String loginEndpoint = "http://localhost:" + port + "/reservation-service/api/v1/member/login";
@@ -328,7 +292,7 @@ class ReservationTests {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		Map<String, String> authMap = new HashMap<>();
-		authMap.put("username", "jardiamj@gymapp.com");
+		authMap.put("username", "unittest@setslotsweat.com");
 		authMap.put("password", "Password");
 
 		// Loging in

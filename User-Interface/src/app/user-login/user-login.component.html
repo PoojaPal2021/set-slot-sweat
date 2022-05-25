@@ -1,11 +1,11 @@
 
-
-<form [formGroup]="loginForm" (ngSubmit)="loadProfile(loginForm)" >
+<div class="loginTemplate" >
+<form [formGroup]="loginForm" (ngSubmit)="loadProfile(loginForm)" [hidden]="hideLoginForm" >
     <!-- [hidden]="hideLoginForm"  -->
  
     <ul class="wrapper">
        <li class="form-row">
-          <label for="user-email">Email: </label>
+          <label for="user-email"><strong>Email:</strong> </label>
           <input id="user-email" type="email" formControlName="email">
          
        </li>
@@ -16,7 +16,7 @@
  
     <ul class="wrapper">
        <li class="form-row">
-          <label for="user-pwd">Passowrd: </label>
+          <label for="user-pwd"><strong>Password:</strong></label>
           <input id="user-pwd" type="password" formControlName="password">
           
        </li>
@@ -26,47 +26,458 @@
     </div>
  
  <div>
-   <button type="submit" [disabled]="!loginForm.valid" >Login</button>  
+   <button type="submit" [disabled]="!loginForm.valid" class="LoginButton"><strong> Login</strong></button>  
  </div>
  
 </form>
+<div  onclick="this.style.display='none'" *ngIf='loginErrorMessage.length > 0' class="Emessage">
+  {{loginErrorMessage}}
+   <span  style="float: right; margin-right: 10px;" > <strong>  &times;</strong></span>  
+</div>
 
-
-<!-- <div class="container">
-    <h1> {{userEmail}}</h1>
 </div>
 
 
-<div class="scheduleBody">
-<mat-card class="example-card" *ngFor="let singSessionInfo of allSessionInfo">
-    <mat-card-title-group>
-    <img mat-card-sm-image src="../../assets/images/gym_logo.png" >
-    <mat-card-title> {{singSessionInfo.sTitle}}</mat-card-title>
-    <mat-card-subtitle>
-            {{singSessionInfo.sTrainer}}
-          <div>
-            {{singSessionInfo.sSlot}}
-          </div> 
-     </mat-card-subtitle>
-    </mat-card-title-group>
-    <mat-card-content>
-     {{singSessionInfo.description}}
-     <div *ngIf="!singSessionInfo.sStatus">
-        <button mat-raised-button (click)="bookSession(singSessionInfo)">Book</button> &nbsp; &nbsp;  
-     </div>  
-     <br/>
-     <div *ngIf="singSessionInfo.sStatus">
-      <button mat-raised-button (click)="cancelSession(singSessionInfo)"> Cancel</button>  
-     </div>
-    </mat-card-content>
-    <br/>
-  </mat-card>
+
+<div class="userIcon" *ngIf="showloginTemp" >
+      <button mat-icon-button color="green"  [matMenuTriggerFor]="userMenu">
+        <span style="margin-right: 10px;">{{userEmail}}</span>
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <mat-menu #userMenu="matMenu" class="userMenuItem">
+        <!-- disabled -->
+        <button mat-menu-item class="userMenuItem">
+          <mat-icon>reorder</mat-icon>
+          <span>Account Details</span>
+        </button>
+        <button  (click)="logOutEventEvent()"   mat-menu-item routerLink="/"  class="userMenuItem">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Log out</span>
+        </button>
+      </mat-menu>
 </div>
+
+
+<div class="ScheduleTemplate" *ngIf="showloginTemp" >
+  <mat-tab-group >
+    <mat-tab label="Upcoming Sessions"  >
+      <a *ngIf="!isPresentUpSesh">
+          <div style="margin: 20px;">
+            {{infoMessage}}
+          </div>    
+      </a>
+      <div *ngFor="let eachUpcomingSession of upcomingSessionInfo; " >
+        <mat-card class="example-card" *ngIf="eachUpcomingSession.booked">
+          <mat-card-title-group>
+          <img mat-card-md-image src="../../assets/images/gym_logo.png" >
+          <mat-card-title> {{eachUpcomingSession.session.workout.name}}</mat-card-title>
+          <mat-card-subtitle>
+                  {{eachUpcomingSession.session.trainer.firstName}} &nbsp; {{eachUpcomingSession.session.trainer.lastName}}
+                <div>
+                  {{eachUpcomingSession.session.startTime }}
+                </div>
+                <div>
+                  {{eachUpcomingSession.session.dayOfWeek}}
+                </div> 
+          </mat-card-subtitle>
+          </mat-card-title-group>
+          <mat-card-content>
+            <div>
+          {{eachUpcomingSession.session.workout.description}}
+          </div>
+          <div style="margin-top: 15px;"> 
+            <!-- *ngIf="!singSessionInfo.sStatus" --> 
+            
+            <button mat-raised-button  class="cancelButton" (click)="cancelSession(eachUpcomingSession,'upcoming')"  *ngIf="eachUpcomingSession.booked" > Cancel</button>   
+            <!-- (click)="bookSession(singSessionInfo)" -->
+        </div>
+            
+            
+          </mat-card-content>
+          <br/>
+        </mat-card>
+      </div>
+
+    </mat-tab>
+    <mat-tab label="Manage Sessions">
+         
+          <input type="hidden" #selection value="{{weekDaysFrmTdy[0]}}">
+          <a class="card-container"  *ngFor="let weekday of weekDaysFrmTdy; let i = index"  >
+                <button mat-fab  (click)="selection.value = weekday" tabindex="0" [class.active]="selection.value === weekday"> 
+                    <!-- <svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> -->
+                    <span> <strong>{{weekday}}</strong></span>
+                </button>
+          </a>
+              
+
+
+          <div class="terminal" [ngSwitch]="selection.value" >
+            <a *ngSwitchCase="'MON'">
+              <div *ngFor="let singSessionInfo of sessionInfo; ">
+                <mat-card class="example-card"   *ngIf="selection.value == singSessionInfo.session.dayOfWeek.slice(0,3)">
+                  <mat-card-title-group>
+                  <img mat-card-md-image src="../../assets/images/gym_logo.png" >
+                  <mat-card-title> {{singSessionInfo.session.workout.name}}</mat-card-title>
+                  <mat-card-subtitle>
+                          {{singSessionInfo.session.trainer.firstName}} &nbsp; {{singSessionInfo.session.trainer.lastName}}
+                        <div>
+                          {{singSessionInfo.session.startTime }}
+                        </div>
+                        <div>
+                          {{singSessionInfo.session.dayOfWeek}}
+                        </div> 
+                  </mat-card-subtitle>
+                  </mat-card-title-group>
+                  <mat-card-content>
+                    <div>
+                  {{singSessionInfo.session.workout.description}}
+                  </div>
+                    <div style="margin-top: 15px;"> 
+                      <!-- *ngIf="!singSessionInfo.sStatus" --> 
+                      <button mat-raised-button class="bookButton"(click)="bookSession(singSessionInfo, 'manage')"  *ngIf="!singSessionInfo.booked"> Reserve </button> &nbsp; &nbsp; 
+                      <button mat-raised-button  class="cancelButton" (click)="cancelSession(singSessionInfo,'manage')" *ngIf="singSessionInfo.booked" > Cancel</button>   
+                      <!-- (click)="bookSession(singSessionInfo)" -->
+                  </div>
+                    <!-- *ngIf="singSessionInfo.sStatus" -->
+                    
+                    <!-- (click)="cancelSession(singSessionInfo)" -->
+                    
+                  </mat-card-content>
+                  <br/>
+                </mat-card>
+              </div>
+            </a>
+
+            <a *ngSwitchCase="'TUE'">
+              <div *ngFor="let singSessionInfo of sessionInfo; ">
+                <mat-card class="example-card"   *ngIf="selection.value == singSessionInfo.session.dayOfWeek.slice(0,3)">
+                  <mat-card-title-group>
+                  <img mat-card-md-image src="../../assets/images/gym_logo.png" >
+                  <mat-card-title> {{singSessionInfo.session.workout.name}}</mat-card-title>
+                  <mat-card-subtitle>
+                          {{singSessionInfo.session.trainer.firstName}} &nbsp; {{singSessionInfo.session.trainer.lastName}}
+                        <div>
+                          {{singSessionInfo.session.startTime }}
+                        </div>
+                        <div>
+                          {{singSessionInfo.session.dayOfWeek}}
+                        </div> 
+                  </mat-card-subtitle>
+                  </mat-card-title-group>
+                  <mat-card-content>
+                    <div>
+                  {{singSessionInfo.session.workout.description}}
+                  </div>
+                    <div style="margin-top: 15px;"> 
+                      <!-- *ngIf="!singSessionInfo.sStatus" --> 
+                      <button mat-raised-button class="bookButton" (click)="bookSession(singSessionInfo, 'manage')"  *ngIf="!singSessionInfo.booked"> Reserve </button> &nbsp; &nbsp; 
+                      <button mat-raised-button  class="cancelButton" (click)="cancelSession(singSessionInfo,'manage')" *ngIf="singSessionInfo.booked" > Cancel</button>   
+                      <!-- (click)="bookSession(singSessionInfo)" -->
+                  </div>
+                    <!-- *ngIf="singSessionInfo.sStatus" -->
+                    
+                    <!-- (click)="cancelSession(singSessionInfo)" -->
+                    
+                  </mat-card-content>
+                  <br/>
+                </mat-card>
+              </div>
+            </a>
+
+            <a *ngSwitchCase="'WED'">
+              <div *ngFor="let singSessionInfo of sessionInfo; ">
+                <mat-card class="example-card"   *ngIf="selection.value == singSessionInfo.session.dayOfWeek.slice(0,3)">
+                  <mat-card-title-group>
+                  <img mat-card-md-image src="../../assets/images/gym_logo.png" >
+                  <mat-card-title> {{singSessionInfo.session.workout.name}}</mat-card-title>
+                  <mat-card-subtitle>
+                          {{singSessionInfo.session.trainer.firstName}} &nbsp; {{singSessionInfo.session.trainer.lastName}}
+                        <div>
+                          {{singSessionInfo.session.startTime }}
+                        </div>
+                        <div>
+                          {{singSessionInfo.session.dayOfWeek}}
+                        </div> 
+                  </mat-card-subtitle>
+                  </mat-card-title-group>
+                  <mat-card-content>
+                    <div>
+                  {{singSessionInfo.session.workout.description}}
+                  </div>
+                    <div style="margin-top: 15px;"> 
+                      <!-- *ngIf="!singSessionInfo.sStatus" --> 
+                      <button mat-raised-button class="bookButton" (click)="bookSession(singSessionInfo, 'manage')"  *ngIf="!singSessionInfo.booked"> Reserve </button> &nbsp; &nbsp; 
+                      <button mat-raised-button class="cancelButton"  (click)="cancelSession(singSessionInfo,'manage')" *ngIf="singSessionInfo.booked" > Cancel</button>   
+                      <!-- (click)="bookSession(singSessionInfo)" -->
+                  </div>
+                    <!-- *ngIf="singSessionInfo.sStatus" -->
+                    
+                    <!-- (click)="cancelSession(singSessionInfo)" -->
+                    
+                  </mat-card-content>
+                  <br/>
+                </mat-card>
+              </div>
+            </a>
+
+            <a *ngSwitchCase="'THU'">
+              <div *ngFor="let singSessionInfo of sessionInfo; ">
+                <mat-card class="example-card"   *ngIf="selection.value == singSessionInfo.session.dayOfWeek.slice(0,3)">
+                  <mat-card-title-group>
+                  <img mat-card-md-image src="../../assets/images/gym_logo.png" >
+                  <mat-card-title> {{singSessionInfo.session.workout.name}}</mat-card-title>
+                  <mat-card-subtitle>
+                          {{singSessionInfo.session.trainer.firstName}} &nbsp; {{singSessionInfo.session.trainer.lastName}}
+                        <div>
+                          {{singSessionInfo.session.startTime }}
+                        </div>
+                        <div>
+                          {{singSessionInfo.session.dayOfWeek}}
+                        </div> 
+                  </mat-card-subtitle>
+                  </mat-card-title-group>
+                  <mat-card-content>
+                    <div>
+                  {{singSessionInfo.session.workout.description}}
+                  </div>
+                    <div style="margin-top: 15px;"> 
+                      <!-- *ngIf="!singSessionInfo.sStatus" --> 
+                      <button mat-raised-button  class="bookButton" (click)="bookSession(singSessionInfo, 'manage')"  *ngIf="!singSessionInfo.booked"> Reserve </button> &nbsp; &nbsp; 
+                      <button mat-raised-button  class="cancelButton" (click)="cancelSession(singSessionInfo,'manage')" *ngIf="singSessionInfo.booked" > Cancel</button>   
+                      <!-- (click)="bookSession(singSessionInfo)" -->
+                  </div>
+                    <!-- *ngIf="singSessionInfo.sStatus" -->
+                    
+                    <!-- (click)="cancelSession(singSessionInfo)" -->
+                    
+                  </mat-card-content>
+                  <br/>
+                </mat-card>
+              </div>
+            </a>
+
+            <a *ngSwitchCase="'FRI'">
+              <div *ngFor="let singSessionInfo of sessionInfo; ">
+                <mat-card class="example-card"   *ngIf="selection.value == singSessionInfo.session.dayOfWeek.slice(0,3)">
+                  <mat-card-title-group>
+                  <img mat-card-md-image src="../../assets/images/gym_logo.png" >
+                  <mat-card-title> {{singSessionInfo.session.workout.name}}</mat-card-title>
+                  <mat-card-subtitle>
+                          {{singSessionInfo.session.trainer.firstName}} &nbsp; {{singSessionInfo.session.trainer.lastName}}
+                        <div>
+                          {{singSessionInfo.session.startTime }}
+                        </div>
+                        <div>
+                          {{singSessionInfo.session.dayOfWeek}}
+                        </div> 
+                  </mat-card-subtitle>
+                  </mat-card-title-group>
+                  <mat-card-content>
+                    <div>
+                  {{singSessionInfo.session.workout.description}}
+                  </div>
+                    <div style="margin-top: 15px;"> 
+                      <!-- *ngIf="!singSessionInfo.sStatus" --> 
+                      <button mat-raised-button  class="bookButton" (click)="bookSession(singSessionInfo, 'manage')"  *ngIf="!singSessionInfo.booked"> Reserve </button> &nbsp; &nbsp; 
+                      <button mat-raised-button  class="cancelButton" (click)="cancelSession(singSessionInfo,'manage')" *ngIf="singSessionInfo.booked" > Cancel</button>   
+                      <!-- (click)="bookSession(singSessionInfo)" -->
+                  </div>
+                    <!-- *ngIf="singSessionInfo.sStatus" -->
+                    
+                    <!-- (click)="cancelSession(singSessionInfo)" -->
+                    
+                  </mat-card-content>
+                  <br/>
+                </mat-card>
+              </div>
+            </a>
+
+            <a *ngSwitchCase="'SAT'">
+              <div *ngFor="let singSessionInfo of sessionInfo; ">
+                <mat-card class="example-card"   *ngIf="selection.value == singSessionInfo.session.dayOfWeek.slice(0,3)">
+                  <mat-card-title-group>
+                  <img mat-card-md-image src="../../assets/images/gym_logo.png" >
+                  <mat-card-title> {{singSessionInfo.session.workout.name}}</mat-card-title>
+                  <mat-card-subtitle>
+                          {{singSessionInfo.session.trainer.firstName}} &nbsp; {{singSessionInfo.session.trainer.lastName}}
+                        <div>
+                          {{singSessionInfo.session.startTime }}
+                        </div>
+                        <div>
+                          {{singSessionInfo.session.dayOfWeek}}
+                        </div> 
+                  </mat-card-subtitle>
+                  </mat-card-title-group>
+                  <mat-card-content>
+                    <div>
+                  {{singSessionInfo.session.workout.description}}
+                  </div>
+                    <div style="margin-top: 15px;"> 
+                      <!-- *ngIf="!singSessionInfo.sStatus" --> 
+                      <button mat-raised-button class="bookButton" (click)="bookSession(singSessionInfo, 'manage')"  *ngIf="!singSessionInfo.booked"> Reserve </button> &nbsp; &nbsp; 
+    
+                      <button mat-raised-button  class="cancelButton" (click)="cancelSession(singSessionInfo,'manage')" *ngIf="singSessionInfo.booked" > Cancel</button>   
+                      <!-- (click)="bookSession(singSessionInfo)" -->
+                  </div>
+                    <!-- *ngIf="singSessionInfo.sStatus" -->
+                    
+                    <!-- (click)="cancelSession(singSessionInfo)" -->
+                    
+                  </mat-card-content>
+                  <br/>
+                </mat-card>
+              </div>
+            </a>
+
+            <a *ngSwitchCase="'SUN'">
+              <div *ngFor="let singSessionInfo of sessionInfo; ">
+                <mat-card class="example-card"   *ngIf="selection.value == singSessionInfo.session.dayOfWeek.slice(0,3)">
+                  <mat-card-title-group>
+                  <img mat-card-md-image src="../../assets/images/gym_logo.png" >
+                  <mat-card-title> {{singSessionInfo.session.workout.name}}</mat-card-title>
+                  <mat-card-subtitle>
+                          {{singSessionInfo.session.trainer.firstName}} &nbsp; {{singSessionInfo.session.trainer.lastName}}
+                        <div>
+                          {{singSessionInfo.session.startTime }}
+                        </div>
+                        <div>
+                          {{singSessionInfo.session.dayOfWeek}}
+                        </div> 
+                  </mat-card-subtitle>
+                  </mat-card-title-group>
+                  <mat-card-content>
+                    <div>
+                  {{singSessionInfo.session.workout.description}}
+                  </div>
+                    <div style="margin-top: 15px;"> 
+                      <!-- *ngIf="!singSessionInfo.sStatus" --> 
+                      <button mat-raised-button class="bookButton" (click)="bookSession(singSessionInfo, 'manage')"  *ngIf="!singSessionInfo.booked"> Reserve </button> &nbsp; &nbsp; 
+                      <button mat-raised-button  class="cancelButton" (click)="cancelSession(singSessionInfo,'manage')" *ngIf="singSessionInfo.booked" > Cancel</button>   
+                      <!-- (click)="bookSession(singSessionInfo)" -->
+                  </div>
+                    <!-- *ngIf="singSessionInfo.sStatus" -->
+                    
+                    <!-- (click)="cancelSession(singSessionInfo)" -->
+                    
+                  </mat-card-content>
+                  <br/>
+                </mat-card>
+              </div>
+            </a >
+
+          </div>
+
+          
+          
+
+      
+    </mat-tab>
+    <mat-tab label="Reports">
+      
+      <div class="chart" *ngIf="pieChartLabels.length > 0">
+            <canvas class="graphStyle" baseChart 
+            [data]="pieChartData"
+            [labels]="pieChartLabels"
+            [chartType]="pieChartType"
+            [options]="pieChartOptions"
+            [plugins]="pieChartPlugins"
+            [legend]="pieChartLegend"
+            [colors]="chartColors">
+          </canvas>
+          <br/>
+          <mat-card class="historyInfo">
+            <span> Total Session Attended : </span>
+            <strong> {{totalSessionAttended}} </strong>
+            <br/>
+            <span> 
+              <mat-icon [ngStyle]="{'color':'red'}">favorite</mat-icon>
+              <strong > {{favoriteSession}} </strong>
+             </span>
+          </mat-card>
+          
+    </div>
+    </mat-tab>
+  </mat-tab-group>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+
+<ul [ngSwitch]="selection.value">
+  <div *ngSwitchCase="'MONDAY'" >
   
+  <span *ngFor="let singSessionInfo of sessionInfo">
+    <mat-card class="example-card"  *ngIf="singSessionInfo.session.dayOfWeek == 'MONDAY'">
+      <mat-card-title-group>
+            <img mat-card-sm-image src="../../assets/images/gym_logo.png" >
+            <mat-card-title> {{singSessionInfo.session.workout.name}}</mat-card-title>
+        
+            <mat-card-subtitle>
+                    {{singSessionInfo.session.trainer.firstName}} &nbsp; {{singSessionInfo.session.trainer.lastName}}
+                  <div>
+                    {{singSessionInfo.session.startTime }}
+                  </div> 
+                  <div>
+                    {{singSessionInfo.session.dayOfWeek}}
+                  </div> 
+            </mat-card-subtitle>
+      </mat-card-title-group>
+      <mat-card-content>
+             {{singSessionInfo.session.workout.description}}
+               <!-- <div *ngIf="!singSessionInfo.sStatus">
+                <button mat-raised-button (click)="bookSession(singSessionInfo)">Book</button> &nbsp; &nbsp;  
+             </div>     -->
+             <!-- <br/> -->
+             <!-- <div *ngIf="singSessionInfo.sStatus">
+              <button mat-raised-button (click)="cancelSession(singSessionInfo)"> Cancel</button>  
+             </div>  
+      </mat-card-content>
+      <br/>
+  </mat-card>
+</span>
+</div>
+</ul> -->
 
 
-<div>
 
-  -->
 
- -->
+
+
+
+
+
+
+
+

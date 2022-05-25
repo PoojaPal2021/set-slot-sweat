@@ -1,7 +1,9 @@
 package edu.uwb.gymapp.resources;
 
 import edu.uwb.gymapp.models.Reservation;
+import edu.uwb.gymapp.models.ResponseMessage;
 import edu.uwb.gymapp.models.Session;
+import edu.uwb.gymapp.models.SessionHistory;
 import edu.uwb.gymapp.workoutsession.SessionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +20,9 @@ import java.security.Principal;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+/**
+ * Rest controller for Reservation management API
+ */
 @RestController
 @RequestMapping("/reservation-service/api/v1")
 public class ReservationController {
@@ -112,7 +117,7 @@ public class ReservationController {
         } catch (RuntimeException ex) {
             logger.debug("Failed to book session with id: " + sessionId);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Reservation failed: " + ex.getCause().getCause().getMessage());
+                    "Failed: " + ex.getCause().getCause().getMessage());
         }
 
         if (!status.equals("SUCCESS")) {
@@ -131,9 +136,9 @@ public class ReservationController {
      * @param reservationId The id of the reservation to be cancelled
      * @return  Success or failure message string
      */
-    @RequestMapping(value="/session/cancel/{reservationId}", method=RequestMethod.DELETE)
-    public String cancelReservation(@RequestParam("email") String email,
-                                    @PathVariable Long reservationId) {
+    @RequestMapping(value="/session/cancel/{reservationId}", method=RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseMessage cancelReservation(@RequestParam("email") String email,
+                                             @PathVariable Long reservationId) {
         // Authenticate
         if (authentication == null || !authentication.getName().equals(email)) {
             logger.debug("Blocked reservation cancelling access to user: " + email);
@@ -148,7 +153,8 @@ public class ReservationController {
         }
 
         logger.info("Successfully cancelled reservation with id: " + reservationId);
-        return "Successfully cancelled reservation.";
+        ResponseMessage responseMessage = new ResponseMessage("Successfully cancelled reservation.");
+        return responseMessage;
     }
 
     /**
@@ -167,6 +173,41 @@ public class ReservationController {
         logger.info("All reservations have been retrieved for user: " + email);
         return reservationService.getAllReservations(email);
     }
+
+    /**
+     * Retrieve the list of reservations booked by the given member email
+     * @param email The email address of the member retrieving the list of reservations
+     * @return The list of reservations booked by the given member
+     */
+    @RequestMapping(value="/reservations/booked", params="email", method = RequestMethod.GET)
+    public List<Reservation> getAllBookedReservations(@RequestParam("email") String email) {
+        // Verify that we are accessing the reservations for the current user
+        if (authentication == null || !authentication.getName().equals(email)) {
+            logger.debug("Blocked reservations access to user: " + email);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access not allowed for: " + email);
+        }
+
+        logger.info("All reservations have been retrieved for user: " + email);
+        return reservationService.getAllBookedReservations(email);
+    }
+
+    /**
+     * Retrieve a summary of the reservation history of the given member, since they joined the gym
+     * @param email The email of the gym member
+     * @return  The history of the member's reservations since they joined the gym
+     */
+    @RequestMapping(value="/reservations/history", params="email", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public SessionHistory getReservationHistory(@RequestParam("email") String email) {
+        // Verify that we are accessing the reservations for the current user
+        if (authentication == null || !authentication.getName().equals(email)) {
+            logger.debug("Blocked reservations access to user: " + email);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access not allowed for: " + email);
+        }
+
+        logger.info("Reservation history has been retrieved for user: " + email);
+        return reservationService.getHistory(email);
+    }
+
 
     /**
      * Retrieve the list of reservations

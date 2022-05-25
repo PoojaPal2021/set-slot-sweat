@@ -13,7 +13,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-
+/**
+ * Rest Controller for defining the Trainer management API
+ */
 @RestController
 @RequestMapping("/reservation-service/api/v1")
 public class TrainerController {
@@ -66,30 +68,6 @@ public class TrainerController {
                     "Failed to create user profile. Review your information and try again.");
         }
     }
-
-    /**
-     * Authenticates member credentials and sets an authentication token for future requests
-     * @param memberDetails The member details with its username (email) and password
-     * @return  The list of reservations for the given member
-     */
-//    @RequestMapping(value="/trainer/login", method = RequestMethod.POST)
-//    public List<Reservation> login(@RequestBody MemberDetails memberDetails) {
-//
-//        UsernamePasswordAuthenticationToken authReq =
-//                new UsernamePasswordAuthenticationToken(memberDetails.getUsername(),
-//                        memberDetails.getPassword());
-//        try {
-//            authentication = authenticationManager.authenticate(authReq);
-//        } catch (Exception e) {
-//            logger.debug("Unable to authenticate user with email: " + memberDetails.getUsername());
-//            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unable to authenticate user. Try again.");
-//        }
-//
-//        List<Reservation> reservations = reservationService.getAllReservations(memberDetails.getUsername());
-//
-//        logger.info("Successful login for Member: " + memberDetails.getUsername());
-//        return reservations;
-//    }
 
 
     /**

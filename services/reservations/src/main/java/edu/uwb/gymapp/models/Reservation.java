@@ -4,6 +4,9 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * Represents the Reservation table in the database.
+ */
 @Entity
 public class Reservation {
 
@@ -92,12 +95,4 @@ public class Reservation {
     public void setSession(Session session) {
         this.session = session;
     }
-
-//    public Member getMember() {
-//        return member;
-//    }
-//
-//    public void setMember(Member member) {
-//        this.member = member;
-//    }
 }

@@ -19,6 +19,12 @@ describe('ScheduleSessionService', () => {
   it('checks if the user defined service is UP', () => {
     expect(service).toBeTruthy();
   });
+  it('checks if emitter steup is ready', () => {
+    expect(service.aClickedEvent).toBeDefined();
+  });
+  it('checks if necessary functions are defined and used', () => {
+    expect(service.bookSession).toBeDefined();
+  });
 
   //need to integrate with the backend services
   // it('loadProfileData should use GET to retrieve data', () => {

@@ -11,6 +11,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This class holds the details of the gym members for authentication purposes
+ */
 public class MemberDetails implements UserDetails {
 
 
@@ -26,6 +29,11 @@ public class MemberDetails implements UserDetails {
 
     public MemberDetails() {}
 
+    /**
+     * Returns the list of roles for application users
+     * The roles are hardcoded until we have user with different roles
+     * @return The list of roles
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // we hardcode the roles for now
@@ -73,8 +81,4 @@ public class MemberDetails implements UserDetails {
     public void setPassword(String password) {
         this.password = password;
     }
-
-//    public String getFullName() {
-//        return username;
-//    }
 }

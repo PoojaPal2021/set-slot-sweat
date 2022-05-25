@@ -15,6 +15,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+/**
+ * Class for configuring the Spring Boot security plug-in
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
@@ -27,13 +30,22 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
-
+    /**
+     * Set the configuration using the Authentication manager builder
+     * @param auth  The AuthenticationManagerBuilder
+     * @throws Exception
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         // Set configuration on the auth object
         auth.userDetailsService(userDetailsService());
     }
 
+    /**
+     * Set the configuration for the HttpSecurity
+     * @param http  The HttpSecurity object
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.sessionManagement()
@@ -55,16 +67,28 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
     }
 
+    /**
+     * Returns the UserDetailsService to be user for authentication
+     * @return  The UserDetailsService to be user for authentication
+     */
     @Bean
     public UserDetailsService userDetailsService() {
         return new MemberDetailsService();
     }
 
+    /**
+     * Returns the password encoder for the application
+     * @return  The password encoder por the application
+     */
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Returns the authentication provider for the application
+     * @return  The authentication provider for the application
+     */
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -74,14 +98,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return authProvider;
     }
 
+    /**
+     * Returns the AuthenticationManager to be used for the application
+     * @return  The AuthenticationManager to be used for the application
+     * @throws Exception
+     */
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
-//    @Bean
-//    public PasswordEncoder getPasswordEncoder() {
-//        return NoOpPasswordEncoder.getInstance();
-//    }
 }
