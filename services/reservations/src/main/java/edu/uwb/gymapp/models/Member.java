@@ -6,7 +6,10 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-
+/**
+ * This class holds the member information. It is meant to be for serialization and desearilization purposes,
+ * the data is only persisted by the User Management microservice.
+ */
 public class Member {
 
     private Long id;

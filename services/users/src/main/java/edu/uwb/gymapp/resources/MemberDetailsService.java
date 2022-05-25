@@ -9,11 +9,20 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
 
+/**
+ * Loads the Gym Member details as UserDetails for authentication purposes
+ */
 public class MemberDetailsService implements UserDetailsService {
 
     @Autowired
     private MemberRepository memberRepository;
 
+    /**
+     * Load the Member information as UserDetails for authentication purposes
+     * @param email The email of the Gym Member
+     * @return  The UserDetails for the given member
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         System.out.println("In Service...");

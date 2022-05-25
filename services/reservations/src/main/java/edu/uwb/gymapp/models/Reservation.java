@@ -4,6 +4,9 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * Represents the Reservation table in the database.
+ */
 @Entity
 public class Reservation {
 

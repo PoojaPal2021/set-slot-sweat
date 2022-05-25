@@ -14,6 +14,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+/**
+ * Rest Controller for the User Management API
+ */
 @RestController
 @RequestMapping("/user-management/api/v1")
 public class MemberController {

@@ -18,6 +18,12 @@ public class MemberDetailsService implements UserDetailsService {
     @Autowired
     private RestTemplate restTemplate;
 
+    /**
+     * Load the user information into a MemberDetails object for authentication purposes
+     * @param email The user email address
+     * @return  A MemberDetails object with the user information
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 

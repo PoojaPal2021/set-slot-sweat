@@ -1,5 +1,8 @@
 package edu.uwb.gymapp.models;
 
+/**
+ * Encapsulates the workout history to be sent in a response message
+ */
 public class WorkoutHistory {
     private String name;
     private long total;

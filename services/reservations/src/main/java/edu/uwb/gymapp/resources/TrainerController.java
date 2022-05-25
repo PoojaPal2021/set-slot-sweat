@@ -13,7 +13,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-
+/**
+ * Rest Controller for defining the Trainer management API
+ */
 @RestController
 @RequestMapping("/reservation-service/api/v1")
 public class TrainerController {

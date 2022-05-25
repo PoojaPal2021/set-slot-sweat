@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Rest Controller for the Session Management API
+ */
 @RestController
 public class SessionController {
 
